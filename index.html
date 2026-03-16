@@ -7,7 +7,6 @@
 <link rel="manifest" href="data:application/manifest+json,{%22name%22:%22Smart%2011%22,%22short_name%22:%22Smart11%22,%22start_url%22:%22./%22,%22display%22:%22standalone%22,%22background_color%22:%22%23050a14%22,%22theme_color%22:%22%2300d4ff%22}"/>
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Exo+2:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 
-<!-- Firebase loaded in head (no type=module, global scope) -->
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
@@ -229,7 +228,6 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 </head>
 <body>
 
-<!-- AUTH SCREEN -->
 <div id="auth-screen" class="screen" style="display:flex">
   <div class="a-logo"><div class="ico">🏏</div><h1>SMART 11</h1><p>Cricket Prediction Platform</p></div>
   <div class="a-box">
@@ -237,7 +235,6 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
       <button class="tab on" id="tl" onclick="stab('login')">LOGIN</button>
       <button class="tab" id="ts" onclick="stab('signup')">SIGN UP</button>
     </div>
-    <!-- LOGIN FORM -->
     <div id="lf">
       <div class="ig"><label>Email</label><input type="email" id="le" placeholder="your@email.com"/></div>
       <div class="ig"><label>Password</label><input type="password" id="lp" placeholder="••••••••"/></div>
@@ -248,7 +245,6 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
         Continue with Google
       </button>
     </div>
-    <!-- SIGNUP FORM -->
     <div id="sf" style="display:none">
       <div class="ig"><label>Full Name</label><input type="text" id="sn" placeholder="Your Name"/></div>
       <div class="ig"><label>Email</label><input type="email" id="se" placeholder="your@email.com"/></div>
@@ -265,9 +261,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
   </div>
 </div>
 
-<!-- MAIN SCREEN -->
 <div id="main-screen" class="screen" style="display:none">
-  <!-- TOP NAVBAR -->
   <div id="navbar">
     <div class="n-logo">🏏 SMART 11</div>
     <div class="n-right">
@@ -277,7 +271,6 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
     </div>
   </div>
 
-  <!-- HOME PAGE -->
   <div class="page on" id="page-home">
     <div class="hero">
       <h2>🔥 Win Big Today!</h2>
@@ -285,10 +278,8 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
       <span class="tag">💰 Prize Pools up to ₹10,000</span>
     </div>
 
-    <!-- Daily Bonus Section -->
     <div id="daily-bonus-ui"></div>
 
-    <!-- Live Bonus Section -->
     <div id="live-bonus-ui"></div>
 
     <div class="sh"><h3>🏆 Live Contests</h3><span class="live-dot">● LIVE</span></div>
@@ -297,21 +288,19 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
     <div id="lb-home"></div>
   </div>
 
-  <!-- QUESTIONS PAGE -->
   <div class="page" id="page-qs">
+    <div id="iqs-list"></div>
     <div class="sh"><h3>⭐ Bonus Questions</h3><span style="font-size:10px;color:var(--green)">+5 pts each</span></div>
     <div id="bqs-list"><div class="empty"><div class="ei">🎯</div><p>No bonus questions right now</p></div></div>
     <div class="sh" style="margin-top:16px"><h3>🎯 Score Predictions</h3><span style="font-size:10px;color:var(--gold)">5-20 pts</span></div>
     <div id="sqs-list"><div class="empty"><div class="ei">📊</div><p>No score questions yet</p></div></div>
   </div>
 
-  <!-- LEADERBOARD PAGE -->
   <div class="page" id="page-lb">
     <div class="sh"><h3>🏅 Global Leaderboard</h3></div>
     <div id="lb-full"><div class="empty"><div class="ei">🏅</div><div class="ld"><span></span><span></span><span></span></div></div></div>
   </div>
 
-  <!-- POINTS PAGE -->
   <div class="page" id="page-points">
     <div class="pts-hero">
       <div style="font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase">Total Points</div>
@@ -320,15 +309,15 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
       <div class="pts-grid">
         <div class="pb"><div class="v" style="color:var(--neon)" id="p-pm">0</div><div class="l">Pre-Match</div></div>
         <div class="pb"><div class="v" style="color:var(--green)" id="p-bq">0</div><div class="l">Bonus Q</div></div>
-        <div class="pb"><div class="v" style="color:var(--orange)" id="p-lv">0</div><div class="l">Live Time</div></div>
         <div class="pb"><div class="v" style="color:var(--gold)" id="p-sq">0</div><div class="l">Score Q</div></div>
+        <div class="pb"><div class="v" style="color:var(--red)" id="p-iq">0</div><div class="l">Instant Q</div></div>
       </div>
     </div>
     <div class="sh"><h3>📋 How to Earn</h3></div>
     <div class="info-grid">
       <div class="ib"><div class="iv" style="color:var(--neon)">10 pts</div><div class="il">Pre-match correct answer</div></div>
       <div class="ib"><div class="iv" style="color:var(--green)">5 pts</div><div class="il">Bonus question correct</div></div>
-      <div class="ib"><div class="iv" style="color:var(--orange)">1 pt</div><div class="il">Every 5 min live</div></div>
+      <div class="ib"><div class="iv" style="color:var(--red)">5 pts</div><div class="il">Instant live correctly</div></div>
       <div class="ib"><div class="iv" style="color:var(--gold)">5-20 pts</div><div class="il">Score prediction</div></div>
       <div class="ib"><div class="iv" style="color:var(--gold)">₹10</div><div class="il">Daily login bonus</div></div>
       <div class="ib"><div class="iv" style="color:var(--purple)">50 pts</div><div class="il">Signup bonus</div></div>
@@ -337,7 +326,6 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
     <div id="pts-hist"><div class="empty"><div class="ei">📋</div><p>No points earned yet</p></div></div>
   </div>
 
-  <!-- WALLET PAGE -->
   <div class="page" id="page-wallet">
     <div class="wc">
       <div class="lbl">Total Balance</div>
@@ -352,7 +340,6 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
     <div id="txn-list"><div class="empty"><div class="ei">📂</div><p>No transactions yet</p></div></div>
   </div>
 
-  <!-- PROFILE PAGE -->
   <div class="page" id="page-profile">
     <div class="prc">
       <div class="pr-av" id="pr-av">U</div>
@@ -368,7 +355,6 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
     </div>
   </div>
 
-  <!-- BOTTOM NAVIGATION -->
   <div id="botnav">
     <button class="bn on" id="bn-home" onclick="goPage('home')"><div class="bi">🏠</div>Home</button>
     <button class="bn" id="bn-qs" onclick="goPage('qs')"><div class="bi">❓</div>Questions<span class="bn-badge" id="bq-badge" style="display:none">!</span></button>
@@ -379,9 +365,6 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
   </div>
 </div>
 
-<!-- ===== MODALS ===== -->
-
-<!-- QUIZ MODAL -->
 <div class="mov" id="quiz-modal">
   <div class="modal">
     <h3 id="quiz-title">📝 Pre-Match Quiz</h3>
@@ -392,14 +375,13 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
       <div class="quiz-done">
         <div style="font-size:28px;margin-bottom:4px">🎉</div>
         <div style="font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;color:var(--green)">Quiz Complete!</div>
-        <div style="font-size:12px;color:var(--muted);margin-top:3px">Earned <span id="q-pts" style="color:var(--purple);font-weight:700">0</span> points!</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:3px">Earned <span id="q-pts" style="color:var(--purple);font-weight:700">0</span> points immediately!</div>
       </div>
       <button class="btn-ok" style="width:100%;padding:12px;font-size:15px" onclick="proceedJoin()">✅ Join Contest →</button>
     </div>
   </div>
 </div>
 
-<!-- DEPOSIT MODAL -->
 <div class="mov" id="dep-modal">
   <div class="modal">
     <h3>💳 Add Money</h3>
@@ -430,7 +412,6 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
   </div>
 </div>
 
-<!-- WITHDRAW MODAL -->
 <div class="mov" id="wd-modal">
   <div class="modal">
     <h3>💸 Withdraw</h3>
@@ -444,7 +425,6 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
   </div>
 </div>
 
-<!-- JOIN MODAL -->
 <div class="mov" id="join-modal">
   <div class="modal">
     <h3>🏆 Join Contest</h3>
@@ -457,7 +437,6 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
   </div>
 </div>
 
-<!-- CHATBOT -->
 <button id="chatbot-btn" onclick="toggleChat()">💬</button>
 <div id="chat-window">
   <div class="chat-hdr">
@@ -495,7 +474,7 @@ var auth = firebase.auth();
 var db = firebase.firestore();
 
 // ============================================================
-// GLOBAL STATE
+// GLOBAL STATE & SETTINGS
 // ============================================================
 var CU=null, UD=null, SP=null, bqUnsub=null, sqUnsub=null, chatUnsub=null;
 var sN=function(){return String(UD&&UD.name?UD.name:CU&&CU.displayName?CU.displayName:CU&&CU.email?CU.email.split('@')[0]:'User');};
@@ -503,6 +482,37 @@ var sE=function(){return String(CU&&CU.email?CU.email:'');};
 var sU=function(){return String(CU&&CU.uid?CU.uid:'');};
 var WL=function(){return Number(UD&&UD.wallet?UD.wallet:0);};
 var PTS=function(){return Number(UD&&UD.points?UD.points:0);};
+
+var SYS = {minDep: 500, minWd: 100, depOn: true, wdOn: true, regOn: true, maint: false, upi: 'rishabhsisodiya1998@ybl'};
+
+db.collection('settings').doc('platform').onSnapshot(function(s){
+  if(s.exists) {
+    var d=s.data();
+    if(d.minDeposit) SYS.minDep=d.minDeposit;
+    if(d.minWithdraw) SYS.minWd=d.minWithdraw;
+    SYS.depOn=d.deposits!==false;
+    SYS.wdOn=d.withdrawals!==false;
+    SYS.regOn=d.registration!==false;
+    SYS.maint=d.maintenance===true;
+    if(d.upiId) SYS.upi=d.upiId;
+
+    var dAmt = document.getElementById('d-amt');
+    if(dAmt){ dAmt.placeholder='Min ₹'+SYS.minDep; dAmt.min=SYS.minDep; }
+    var wAmt = document.getElementById('w-amt');
+    if(wAmt){ wAmt.placeholder='Min ₹'+SYS.minWd; wAmt.min=SYS.minWd; }
+    
+    var upiId = document.querySelector('.upi-id');
+    if(upiId) upiId.textContent='📱 '+SYS.upi;
+    var upiA = document.querySelector('.qrb a');
+    if(upiA) upiA.href='upi://pay?pa='+SYS.upi+'&pn=Smart11';
+    var minN = document.querySelector('.min-n');
+    if(minN) minN.textContent='⚠️ Minimum Deposit: ₹'+SYS.minDep;
+
+    if(SYS.maint) {
+        document.body.innerHTML = '<h2 style="text-align:center;margin-top:100px;color:var(--neon)">Maintenance Mode Active.<br><br>Please check back later.</h2>';
+    }
+  }
+});
 
 // ============================================================
 // TOAST
@@ -552,6 +562,9 @@ window.doSignup=async function(){
   var em=document.getElementById('se').value.trim();
   var pw=document.getElementById('sp').value;
   var e=document.getElementById('aerr');
+  
+  if(!SYS.regOn) { e.textContent='New registrations are currently disabled.'; return; }
+  
   if(!nm||!em||!pw){e.textContent='Fill all fields';return;}
   if(pw.length<6){e.textContent='Password min 6 characters';return;}
   e.textContent='🔄 Creating account...';e.style.color='var(--neon)';
@@ -560,7 +573,7 @@ window.doSignup=async function(){
     await db.collection('users').doc(c.user.uid).set({
       name:String(nm),email:String(em),photoURL:'',
       wallet:50,bonus:50,points:50,
-      pb:{pm:0,bq:0,lv:0,sq:0,su:50},
+      pb:{pm:0,bq:0,lv:0,sq:0,iq:0,su:50},
       contestsJoined:0,wins:0,
       createdAt:firebase.firestore.FieldValue.serverTimestamp()
     });
@@ -581,7 +594,7 @@ window.doSignup=async function(){
 };
 
 // ============================================================
-// GOOGLE LOGIN — signInWithPopup (fixes redirect issues)
+// GOOGLE LOGIN
 // ============================================================
 window.doGoogle=async function(){
   var e=document.getElementById('aerr');
@@ -600,18 +613,19 @@ window.doGoogle=async function(){
 };
 
 // ============================================================
-// GOOGLE USER HANDLER — create doc if new
+// GOOGLE USER HANDLER
 // ============================================================
 async function handleGU(u){
   try{
     var s=await db.collection('users').doc(u.uid).get();
     if(!s.exists){
+      if(!SYS.regOn) { await auth.signOut(); alert("New registrations are currently disabled."); return; }
       var nm=String(u.displayName||u.email.split('@')[0]||'User');
       var em=String(u.email||'');
       await db.collection('users').doc(u.uid).set({
         name:nm,email:em,photoURL:String(u.photoURL||''),
         wallet:50,bonus:50,points:50,
-        pb:{pm:0,bq:0,lv:0,sq:0,su:50},
+        pb:{pm:0,bq:0,lv:0,sq:0,iq:0,su:50},
         contestsJoined:0,wins:0,
         createdAt:firebase.firestore.FieldValue.serverTimestamp()
       });
@@ -635,12 +649,13 @@ window.doLogout=async function(){
   if(bqUnsub)bqUnsub();
   if(sqUnsub)sqUnsub();
   if(chatUnsub)chatUnsub();
-  bqUnsub=null;sqUnsub=null;chatUnsub=null;
+  if(window.iqUnsub) window.iqUnsub();
+  bqUnsub=null;sqUnsub=null;chatUnsub=null;window.iqUnsub=null;
   await auth.signOut();
 };
 
 // ============================================================
-// AUTH STATE — Auto-login on page load
+// AUTH STATE
 // ============================================================
 auth.onAuthStateChanged(async function(u){
   if(u){
@@ -650,6 +665,7 @@ auth.onAuthStateChanged(async function(u){
     loadPools();
     listenBQ();
     listenSQ();
+    listenIQ(); // Ensure Instant Questions hook is started
     loadLB('lb-home',3);
     startLBCheck();
     renderDailyBonus();
@@ -678,7 +694,7 @@ async function loadUD(){
       var em=String(CU.email||'');
       var nu={name:nm,email:em,photoURL:String(CU.photoURL||''),
         wallet:50,bonus:50,points:50,
-        pb:{pm:0,bq:0,lv:0,sq:0,su:50},
+        pb:{pm:0,bq:0,lv:0,sq:0,iq:0,su:50},
         contestsJoined:0,wins:0,
         createdAt:firebase.firestore.FieldValue.serverTimestamp()};
       await db.collection('users').doc(CU.uid).set(nu);
@@ -708,10 +724,15 @@ function updateUI(){
   document.getElementById('wal-amt').textContent='₹'+b;
   document.getElementById('bon-amt').textContent='₹'+(UD.bonus||0);
   document.getElementById('pts-big').textContent=p;
-  document.getElementById('p-pm').textContent=(UD.pb&&UD.pb.pm)||0;
-  document.getElementById('p-bq').textContent=(UD.pb&&UD.pb.bq)||0;
-  document.getElementById('p-lv').textContent=(UD.pb&&UD.pb.lv)||0;
-  document.getElementById('p-sq').textContent=(UD.pb&&UD.pb.sq)||0;
+  
+  if(UD.pb) {
+      document.getElementById('p-pm').textContent=UD.pb.pm||0;
+      document.getElementById('p-bq').textContent=UD.pb.bq||0;
+      document.getElementById('p-lv').textContent=UD.pb.lv||0;
+      document.getElementById('p-sq').textContent=UD.pb.sq||0;
+      document.getElementById('p-iq').textContent=UD.pb.iq||0;
+  }
+  
   document.getElementById('st-p').textContent=p;
   document.getElementById('st-b').textContent='₹'+b;
   document.getElementById('st-c').textContent=UD.contestsJoined||0;
@@ -751,7 +772,7 @@ async function awardPts(pts,type,title){
 }
 
 // ============================================================
-// DAILY BONUS — ₹10/day, once per day, claim button
+// DAILY BONUS
 // ============================================================
 function renderDailyBonus(){
   var el=document.getElementById('daily-bonus-ui');
@@ -793,7 +814,7 @@ window.claimDailyBonus=async function(){
 };
 
 // ============================================================
-// LIVE BONUS — +1 pt every 5 min during match
+// LIVE BONUS
 // ============================================================
 function startLBCheck(){checkLB();setInterval(checkLB,60000);}
 
@@ -894,7 +915,7 @@ function mkPC(id,name,fee,prize,users,max,desc,dummy){
 }
 
 // ============================================================
-// PRE-MATCH QUIZ — 10 questions, progress bar, no retake
+// PRE-MATCH QUIZ
 // ============================================================
 var QD={};
 window.startQuiz=async function(pid,pname,fee,prize){
@@ -949,8 +970,8 @@ function renderQQ(){
   }).join('');
   var fb='';
   if(ans!==undefined){
-    if(q.correct===null||q.correct===undefined)fb='<div class="ans-b">✅ Saved +'+( q.pts||10)+' pts</div>';
-    else if(ans===q.correct)fb='<div class="ans-b">🎉 Correct! +'+(q.pts||10)+' pts</div>';
+    if(q.correct===null||q.correct===undefined)fb='<div class="ans-b">✅ Saved — Points awarded after Match Settlement</div>';
+    else if(ans===q.correct)fb='<div class="ans-b">🎉 Correct! Points assigned immediately!</div>';
     else fb='<div class="ans-b">❌ Wrong — result known after match</div>';
   }
   document.getElementById('quiz-body').innerHTML='<div class="qc"><span class="qbadge qb-p">PRE-MATCH Q'+(QD.cur+1)+'</span>'
@@ -962,8 +983,13 @@ window.pickOpt=async function(i){
   var q=QD.qs[QD.cur];
   if(QD.ans[QD.cur]!==undefined)return;
   QD.ans[QD.cur]=i;
-  var ok=q.correct===null||q.correct===undefined||i===q.correct;
-  if(ok){QD.score+=(q.pts||10);await awardPts(q.pts||10,'pm','✅ Pre-Match Q'+(QD.cur+1)+' correct');}
+  
+  // Only grant instantaneous points if the correct answer was already provided directly in the Question config (non prediction)
+  var isImmediateKnown = (q.correct !== null && q.correct !== undefined && i === q.correct);
+  if(isImmediateKnown){
+     QD.score+=(q.pts||10);
+     await awardPts(q.pts||10,'pm','✅ Pre-Match Q'+(QD.cur+1)+' correct');
+  }
   renderQQ();
   setTimeout(function(){QD.cur++;if(QD.cur>=QD.qs.length)finishQuiz();else renderQQ();},1100);
 };
@@ -973,7 +999,7 @@ function finishQuiz(){
   document.getElementById('quiz-done').style.display='block';
   document.getElementById('qpf').style.width='100%';
   document.getElementById('qpn').textContent=QD.qs.length+'/'+QD.qs.length;
-  document.getElementById('q-pts').textContent=QD.score;
+  document.getElementById('q-pts').textContent=QD.score; // Tracks immediately awarded known pts
   localStorage.setItem('qz_'+QD.pid+'_'+(CU&&CU.uid?CU.uid:''),'1');
 }
 
@@ -1000,10 +1026,16 @@ window.confirmJoin=async function(){
       contestsJoined:firebase.firestore.FieldValue.increment(1)
     });
     if(SP.id!=='d1'&&SP.id!=='d2'&&SP.id!=='d3'){
-      await db.collection('pools').doc(SP.id).collection('entries').add({
-        uid:sU(),name:sN(),points:PTS(),fee:SP.fee,
-        createdAt:firebase.firestore.FieldValue.serverTimestamp()
-      });
+      var entryData = {
+          uid:sU(),name:sN(),points:PTS(),fee:SP.fee,
+          createdAt:firebase.firestore.FieldValue.serverTimestamp()
+      };
+      if(QD && QD.pid === SP.id && QD.ans){
+          for(var key in QD.ans) {
+              entryData['pmAns_'+key] = QD.ans[key];
+          }
+      }
+      await db.collection('pools').doc(SP.id).collection('entries').doc(sU()).set(entryData);
     }
     await db.collection('users').doc(CU.uid).collection('txns').add({
       type:'debit',title:'🏏 Joined: '+SP.name,amount:Number(SP.fee),status:'completed',
@@ -1017,11 +1049,71 @@ window.confirmJoin=async function(){
 };
 
 // ============================================================
-// BONUS QUESTIONS — Live listen, 2-min SVG timer, settled result
+// INSTANT QUESTIONS (COMPLETED ADHURA FUNCTION)
+// ============================================================
+function listenIQ(){
+  if(window.iqUnsub) window.iqUnsub();
+  window.iqUnsub = db.collection('pollQuestions').where('type','==','instant').onSnapshot(function(s){
+     var el = document.getElementById('iqs-list');
+     if(!el) return;
+     if(s.empty) { el.innerHTML=''; return; }
+     
+     var html='';
+     s.forEach(function(d){
+        var q = d.data();
+        if(q.settled) return; // Do not show settled instant questions to user to avoid clutter
+        var ans = UD&&UD.iqa&&UD.iqa[d.id]!==undefined?UD.iqa[d.id]:undefined;
+        html += mkIQ(d.id, q, ans);
+     });
+     
+     if(html !== '') {
+         el.innerHTML='<div class="sh"><h3>⚡ Instant Live Qs</h3><span class="live-dot">● LIVE</span></div>' + html;
+     } else {
+         el.innerHTML = '';
+     }
+  });
+}
+
+function mkIQ(id, q, ans){
+   var opts = (q.options||[]).map(function(o,i){
+      var cls='opt';
+      if(ans!==undefined){
+         if(i===ans) cls+=' sel';
+      }
+      return '<button class="'+cls+'" onclick="ansIQ(\''+id+'\',\''+(q.pollId||'')+'\','+i+')" '+(ans!==undefined?'disabled':'')+'>'+o+'</button>';
+   }).join('');
+   var fb = ans!==undefined ? '<div class="ans-b">✅ Locked! Keep an eye on your points...</div>' : '';
+   return '<div class="qc" style="border-color:var(--red);background:linear-gradient(135deg,rgba(255,59,92,0.05),rgba(0,0,0,0));">'
+     +'<span class="qbadge" style="background:var(--red);color:#fff">⚡ INSTANT • '+q.pts+' PTS</span>'
+     +'<div class="qt">'+q.question+'</div>'
+     +'<div class="qmeta">🏏 '+(q.match||'Live')+'</div>'
+     +'<div class="opts">'+opts+'</div>'+fb+'</div>';
+}
+
+window.ansIQ = async function(qid, pid, i){
+   if(!CU||!UD) return;
+   if(UD.iqa && UD.iqa[qid]!==undefined) return;
+   try{
+      var upd = {}; upd['iqa.'+qid] = i;
+      await db.collection('users').doc(CU.uid).update(upd);
+      await db.collection('pollQuestions').doc(qid).collection('entries').add({
+         uid: sU(), name: sN(), answer: i, pid: pid,
+         createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+      if(!UD.iqa) UD.iqa={};
+      UD.iqa[qid] = i;
+      toast('⚡ Instant answer locked!','var(--red)');
+      listenIQ();
+   }catch(e){toast('Error: '+e.message,'var(--red)');}
+};
+
+
+// ============================================================
+// BONUS QUESTIONS — Fixed to point to pollQuestions matching Admin
 // ============================================================
 function listenBQ(){
   if(bqUnsub)bqUnsub();
-  bqUnsub=db.collection('bonusQuestions').onSnapshot(function(s){
+  bqUnsub=db.collection('pollQuestions').where('type','==','bonus').onSnapshot(function(s){
     var el=document.getElementById('bqs-list');
     var count=0;
     if(s.empty){
@@ -1043,7 +1135,6 @@ function listenBQ(){
 }
 
 function mkBQ(id,q,ans){
-  // 2-min SVG timer if question has a deadline
   var timerHtml='';
   if(q.deadline&&!q.settled){
     var dl=q.deadline.toDate?q.deadline.toDate():new Date(q.deadline);
@@ -1063,16 +1154,16 @@ function mkBQ(id,q,ans){
       if(q.settled){if(i===q.correctOpt)cls+=' ok';else if(i===ans)cls+=' no';}
       else if(i===ans)cls+=' sel';
     }
-    var ck=q.settled&&i===q.correctOpt?'<span style="color:var(--green);font-size:10px">✓ +5</span>':'';
+    var ck=q.settled&&i===q.correctOpt?'<span style="color:var(--green);font-size:10px">✓ +'+(q.pts||5)+'</span>':'';
     return'<button class="'+cls+'" onclick="ansBQ(\''+id+'\','+i+')" '+(ans!==undefined||q.settled?'disabled':'')+'>'+o+ck+'</button>';
   }).join('');
   var fb='';
   if(ans!==undefined){
-    if(q.settled)fb=ans===q.correctOpt?'<div class="ans-b">🎉 Correct! +5 points!</div>'
+    if(q.settled)fb=ans===q.correctOpt?'<div class="ans-b">🎉 Correct! Points awarded!</div>'
       :'<div class="ans-b" style="border-color:var(--red);color:var(--red)">❌ Wrong. Correct: '+((q.options||[])[q.correctOpt]||'—')+'</div>';
     else fb='<div class="ans-b">✅ Saved — Waiting for result after match...</div>';
   }
-  return'<div class="qc bonus"><span class="qbadge qb-b">⭐ BONUS +5 PTS</span>'
+  return'<div class="qc bonus"><span class="qbadge qb-b">⭐ BONUS +'+(q.pts||5)+' PTS</span>'
     +'<div class="qt">'+q.question+'</div>'
     +'<div class="qmeta">🏏 '+(q.match||'Live')+' · Admin will settle after match</div>'
     +timerHtml
@@ -1085,7 +1176,7 @@ window.ansBQ=async function(qid,i){
   try{
     var upd={};upd['bqa.'+qid]=i;
     await db.collection('users').doc(CU.uid).update(upd);
-    await db.collection('bonusQuestions').doc(qid).collection('entries').add({
+    await db.collection('pollQuestions').doc(qid).collection('entries').add({
       uid:sU(),name:sN(),answer:i,createdAt:firebase.firestore.FieldValue.serverTimestamp()
     });
     if(!UD.bqa)UD.bqa={};
@@ -1096,11 +1187,11 @@ window.ansBQ=async function(qid,i){
 };
 
 // ============================================================
-// SCORE QUESTIONS — Custom 5-20 pts, live listen, answer save
+// SCORE QUESTIONS — Fixed to point to pollQuestions matching Admin
 // ============================================================
 function listenSQ(){
   if(sqUnsub)sqUnsub();
-  sqUnsub=db.collection('scoreQuestions').onSnapshot(function(s){
+  sqUnsub=db.collection('pollQuestions').where('type','==','score').onSnapshot(function(s){
     var el=document.getElementById('sqs-list');
     if(s.empty){el.innerHTML='<div class="empty"><div class="ei">📊</div><p>No score questions yet</p></div>';return;}
     el.innerHTML='';
@@ -1121,7 +1212,7 @@ function mkSQ(id,q,ans){
   }).join('');
   var fb='';
   if(ans!==undefined){
-    if(q.settled)fb=ans===q.correctOpt?'<div class="ans-b">🎉 Correct! +'+((q.options||[])[q.correctOpt]&&(q.options||[])[q.correctOpt].pts||5)+' pts!</div>'
+    if(q.settled)fb=ans===q.correctOpt?'<div class="ans-b">🎉 Correct! Points awarded!</div>'
       :'<div class="ans-b" style="border-color:var(--red);color:var(--red)">❌ Wrong. Correct: '+((q.options||[])[q.correctOpt]&&((q.options||[])[q.correctOpt].label||(q.options||[])[q.correctOpt])||'—')+'</div>';
     else fb='<div class="ans-b">✅ Prediction saved — Result after match!</div>';
   }
@@ -1137,7 +1228,7 @@ window.ansSQ=async function(qid,i,pts){
   try{
     var upd={};upd['sqa.'+qid]=i;
     await db.collection('users').doc(CU.uid).update(upd);
-    await db.collection('scoreQuestions').doc(qid).collection('entries').add({
+    await db.collection('pollQuestions').doc(qid).collection('entries').add({
       uid:sU(),name:sN(),answer:i,potPts:pts,
       createdAt:firebase.firestore.FieldValue.serverTimestamp()
     });
@@ -1148,7 +1239,7 @@ window.ansSQ=async function(qid,i,pts){
 };
 
 // ============================================================
-// LEADERBOARD — Global rank, medals, user highlighted
+// LEADERBOARD
 // ============================================================
 async function loadLB(elId,lim){
   var el=document.getElementById(elId);
@@ -1177,7 +1268,7 @@ async function loadLB(elId,lim){
 }
 
 // ============================================================
-// WALLET — Balance, Deposit (UPI+UTR), Withdraw, Txn history
+// WALLET
 // ============================================================
 window.openDep=function(){
   document.getElementById('d-amt').value='';
@@ -1190,7 +1281,8 @@ window.submitDep=async function(){
   var amt=parseInt(document.getElementById('d-amt').value);
   var utr=document.getElementById('d-utr').value.trim();
   var e=document.getElementById('d-err');
-  if(!amt||amt<500){e.textContent='⚠️ Minimum deposit is ₹500!';return;}
+  if(!SYS.depOn) { e.textContent='Deposits are currently disabled.'; return; }
+  if(!amt||amt<SYS.minDep){e.textContent='⚠️ Minimum deposit is ₹'+SYS.minDep+'!';return;}
   if(!utr||utr.length<6){e.textContent='Enter valid UTR number';return;}
   try{
     var ud=UD;
@@ -1219,7 +1311,8 @@ window.submitWd=async function(){
   var amt=parseInt(document.getElementById('w-amt').value);
   var upi=document.getElementById('w-upi').value.trim();
   var e=document.getElementById('w-err');
-  if(!amt||amt<100){e.textContent='Minimum withdrawal ₹100';return;}
+  if(!SYS.wdOn) { e.textContent='Withdrawals are currently disabled.'; return; }
+  if(!amt||amt<SYS.minWd){e.textContent='Minimum withdrawal ₹'+SYS.minWd;return;}
   if(WL()<amt){e.textContent='Insufficient balance!';return;}
   if(!upi){e.textContent='Enter UPI ID';return;}
   try{
@@ -1261,7 +1354,7 @@ async function loadTxns(){
 }
 
 // ============================================================
-// POINTS HISTORY — pm/bq/lv/sq breakdown
+// POINTS HISTORY
 // ============================================================
 async function loadPH(){
   var el=document.getElementById('pts-hist');
@@ -1269,7 +1362,7 @@ async function loadPH(){
     var s=await db.collection('users').doc(CU.uid).collection('ph').orderBy('createdAt','desc').limit(20).get();
     if(s.empty){el.innerHTML='<div class="empty"><div class="ei">📋</div><p>No points yet</p></div>';return;}
     el.innerHTML='';
-    var cc={pm:'var(--neon)',bq:'var(--green)',lv:'var(--orange)',sq:'var(--gold)',su:'var(--purple)'};
+    var cc={pm:'var(--neon)',bq:'var(--green)',lv:'var(--orange)',sq:'var(--gold)',su:'var(--purple)',iq:'var(--red)'};
     s.forEach(function(d){
       var h=d.data();
       var dt=h.createdAt&&h.createdAt.toDate?h.createdAt.toDate().toLocaleDateString('en-IN'):'—';
@@ -1281,7 +1374,7 @@ async function loadPH(){
 }
 
 // ============================================================
-// CHAT — Live chat, auto-reply, admin messages
+// CHAT
 // ============================================================
 window.toggleChat=function(){
   var w=document.getElementById('chat-window');
@@ -1318,10 +1411,9 @@ window.sendMsg=async function(){
       uid:sU(),name:sN(),text:txt,isAdmin:false,
       createdAt:firebase.firestore.FieldValue.serverTimestamp()
     });
-    // Auto-reply
     var lower=txt.toLowerCase();var reply='';
-    if(lower.includes('point')&&lower.includes('how'))reply='⭐ Points: Pre-match Q=10pts, Bonus Q=5pts, Live timer=1pt/5min, Score Q=5-20pts';
-    else if(lower.includes('deposit')||lower.includes('add money'))reply='💳 Pay via UPI: rishabhsisodiya1998@ybl (Min ₹500). Enter UTR after payment.';
+    if(lower.includes('point')&&lower.includes('how'))reply='⭐ Points: Pre-match Q=10pts, Bonus Q=5pts, Live timer=1pt/5min, Score Q=5-20pts, Instant=5+';
+    else if(lower.includes('deposit')||lower.includes('add money'))reply='💳 Pay via UPI using app QR. Enter UTR after payment.';
     else if(lower.includes('withdraw'))reply='💸 Withdrawals processed within 24h. Min ₹100.';
     else if(lower.includes('contest')||lower.includes('pool'))reply='🏆 Answer 10 pre-match questions → Pay entry fee → Win prizes!';
     else if(lower.includes('result')||lower.includes('answer'))reply='📋 All results settled by admin after match ends.';
@@ -1354,44 +1446,3 @@ window.goPage=function(pg){
   if(pg==='lb')loadLB('lb-full',20);
   if(pg==='points')loadPH();
 };
-
-window.cm=function(id){
-  var el=document.getElementById(id);
-  if(el)el.classList.remove('open');
-};
-
-document.querySelectorAll('.mov').forEach(function(m){
-  m.addEventListener('click',function(e){if(e.target===m)m.classList.remove('open');});
-});
-
-// ============================================================
-// PWA INSTALL
-// ============================================================
-var dp=null;
-window.addEventListener('beforeinstallprompt',function(e){
-  e.preventDefault();
-  dp=e;
-  var btn=document.getElementById('inst-btn');
-  if(btn)btn.style.display='block';
-});
-
-window.installApp=async function(){
-  if(!dp)return;
-  dp.prompt();
-  var res=await dp.userChoice;
-  if(res.outcome==='accepted'){
-    var btn=document.getElementById('inst-btn');
-    if(btn)btn.style.display='none';
-    dp=null;
-  }
-};
-
-window.addEventListener('appinstalled',function(){
-  var btn=document.getElementById('inst-btn');
-  if(btn)btn.style.display='none';
-  dp=null;
-  toast('✅ App Installed!','var(--green)');
-});
-</script>
-</body>
-</html>
