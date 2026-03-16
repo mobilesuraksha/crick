@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Smart 11 - Cricket Prediction</title>
+<link rel="manifest" href="data:application/manifest+json,{%22name%22:%22Smart%2011%22,%22short_name%22:%22Smart11%22,%22start_url%22:%22./%22,%22display%22:%22standalone%22,%22background_color%22:%22%23050a14%22,%22theme_color%22:%22%2300d4ff%22}"/>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Exo+2:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{--bg:#050a14;--bg2:#0a1628;--bg3:rgba(10,22,48,0.9);--neon:#00d4ff;--neon2:#0099cc;--glow:rgba(0,212,255,0.22);--green:#00ff88;--red:#ff3b5c;--gold:#ffd700;--orange:#ff6b35;--purple:#a855f7;--text:#e0f0ff;--muted:#7a9cc0;--border:rgba(0,212,255,0.16);--glass:rgba(0,212,255,0.05);}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:'Exo 2',sans-serif;min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 20% 0%,rgba(0,80,180,0.15),transparent 55%),radial-gradient(ellipse at 80% 100%,rgba(0,150,255,0.08),transparent 55%);pointer-events:none;z-index:0;}
+/* SCREENS */
+.screen{display:none;min-height:100vh;position:relative;z-index:1;}
+/* AUTH */
+#auth-screen{display:flex;align-items:center;justify-content:center;flex-direction:column;padding:20px;}
+.a-logo{text-align:center;margin-bottom:24px;}
+.a-logo .ico{font-size:52px;filter:drop-shadow(0 0 16px var(--neon));}
+.a-logo h1{font-family:'Rajdhani',sans-serif;font-size:38px;font-weight:700;background:linear-gradient(135deg,var(--neon),#fff,var(--neon2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:3px;}
+.a-logo p{color:var(--muted);font-size:11px;letter-spacing:2px;text-transform:uppercase;}
+.a-box{background:var(--bg3);border:1px solid var(--border);border-radius:18px;padding:24px 20px;width:100%;max-width:380px;backdrop-filter:blur(20px);}
+.tabs{display:flex;gap:5px;margin-bottom:18px;background:var(--bg2);border-radius:9px;padding:3px;}
+.tab{flex:1;padding:9px;border:none;background:transparent;color:var(--muted);border-radius:7px;cursor:pointer;font-family:'Exo 2',sans-serif;font-size:13px;font-weight:600;transition:all .3s;}
+.tab.on{background:linear-gradient(135deg,var(--neon2),var(--neon));color:#000;}
+.ig{margin-bottom:13px;}
+.ig label{display:block;font-size:10px;color:var(--muted);margin-bottom:4px;letter-spacing:1px;text-transform:uppercase;}
+.ig input{width:100%;padding:10px 13px;background:rgba(0,212,255,0.05);border:1px solid var(--border);border-radius:9px;color:var(--text);font-family:'Exo 2',sans-serif;font-size:13px;outline:none;transition:all .3s;}
+.ig input:focus{border-color:var(--neon);}
+.btn-m{width:100%;padding:12px;background:linear-gradient(135deg,var(--neon2),var(--neon));border:none;border-radius:11px;color:#000;font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;cursor:pointer;letter-spacing:2px;transition:all .3s;}
+.btn-m:hover{transform:translateY(-1px);box-shadow:0 0 20px var(--glow);}
+.div-or{display:flex;align-items:center;gap:8px;margin:12px 0;color:var(--muted);font-size:10px;}
+.div-or::before,.div-or::after{content:'';flex:1;height:1px;background:var(--border);}
+.btn-g{width:100%;padding:11px;background:#fff;border:none;border-radius:11px;color:#333;font-family:'Exo 2',sans-serif;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px;transition:all .3s;}
+.btn-g:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(0,0,0,0.3);}
+.bonus-b{text-align:center;margin-top:11px;background:rgba(0,255,136,0.07);border:1px solid rgba(0,255,136,0.22);border-radius:7px;padding:6px;font-size:11px;color:var(--green);}
+.err{color:var(--red);font-size:11px;margin-top:5px;text-align:center;min-height:15px;}
+/* MAIN */
+#main-screen{padding-top:66px;padding-bottom:70px;}
+/* NAVBAR */
+#navbar{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(5,10,20,0.96);backdrop-filter:blur(18px);border-bottom:1px solid var(--border);padding:9px 12px;display:flex;align-items:center;justify-content:space-between;}
+.n-logo{font-family:'Rajdhani',sans-serif;font-size:19px;font-weight:700;background:linear-gradient(135deg,var(--neon),#fff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.n-right{display:flex;align-items:center;gap:7px;}
+.n-chip{display:flex;align-items:center;gap:4px;border-radius:7px;padding:4px 9px;cursor:pointer;border:1px solid;}
+.n-pts{background:rgba(168,85,247,0.1);border-color:rgba(168,85,247,0.25);}
+.n-pts span{font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;color:var(--purple);}
+.n-bal{background:var(--glass);border-color:var(--border);}
+.n-bal span{font-size:13px;font-weight:700;color:var(--gold);}
+.n-av{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--neon2),var(--neon));display:flex;align-items:center;justify-content:center;font-weight:700;color:#000;font-size:12px;cursor:pointer;overflow:hidden;flex-shrink:0;}
+.n-av img{width:100%;height:100%;object-fit:cover;}
+/* BOTTOM NAV */
+#botnav{position:fixed;bottom:0;left:0;right:0;z-index:100;background:rgba(5,10,20,0.97);backdrop-filter:blur(18px);border-top:1px solid var(--border);display:flex;}
+.bn{flex:1;padding:9px 2px 5px;display:flex;flex-direction:column;align-items:center;gap:2px;border:none;background:transparent;color:var(--muted);cursor:pointer;font-family:'Exo 2',sans-serif;font-size:9px;font-weight:500;transition:all .3s;position:relative;}
+.bn .bi{font-size:19px;}
+.bn.on{color:var(--neon);}
+.bn.on .bi{filter:drop-shadow(0 0 4px var(--neon));}
+.bn-badge{position:absolute;top:6px;right:calc(50% - 16px);background:var(--red);color:#fff;font-size:9px;font-weight:700;padding:1px 4px;border-radius:4px;min-width:14px;text-align:center;}
+/* PAGES */
+.page{display:none;padding:12px;}
+.page.on{display:block;}
+/* HERO */
+.hero{background:linear-gradient(135deg,#001535,#002550);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:12px;position:relative;overflow:hidden;}
+.hero::before{content:'🏏';position:absolute;right:-6px;top:-6px;font-size:80px;opacity:0.07;transform:rotate(20deg);}
+.hero h2{font-family:'Rajdhani',sans-serif;font-size:19px;font-weight:700;color:var(--neon);}
+.hero p{font-size:11px;color:var(--muted);margin:3px 0 9px;}
+.hero .tag{display:inline-block;background:linear-gradient(135deg,var(--gold),#ff8c00);color:#000;font-weight:700;font-size:10px;padding:2px 8px;border-radius:4px;}
+/* SECTION HDR */
+.sh{display:flex;align-items:center;justify-content:space-between;margin:14px 0 8px;}
+.sh h3{font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;}
+.live-dot{background:var(--red);color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:3px;animation:pulse 1.5s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
+/* POOL CARD */
+.pc{background:var(--bg3);border:1px solid var(--border);border-radius:13px;padding:13px;margin-bottom:9px;backdrop-filter:blur(8px);transition:all .3s;}
+.pc:hover{border-color:var(--neon);}
+.pc-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;}
+.pc-name{font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;}
+.pc-fee{background:linear-gradient(135deg,var(--neon2),var(--neon));color:#000;font-weight:700;font-size:11px;padding:3px 8px;border-radius:6px;}
+.pc-stats{display:flex;gap:12px;font-size:10px;color:var(--muted);margin-bottom:6px;flex-wrap:wrap;}
+.pc-stats span b{color:var(--text);font-size:12px;}
+.pc-ptag{background:rgba(168,85,247,0.1);border:1px solid rgba(168,85,247,0.22);border-radius:5px;padding:2px 7px;font-size:10px;color:var(--purple);margin-bottom:7px;display:inline-block;}
+.prog{height:3px;background:rgba(255,255,255,0.07);border-radius:2px;margin-bottom:9px;overflow:hidden;}
+.prog-f{height:100%;background:linear-gradient(90deg,var(--neon2),var(--neon));border-radius:2px;}
+.btn-j{width:100%;padding:9px;background:linear-gradient(135deg,var(--neon2),var(--neon));border:none;border-radius:8px;color:#000;font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;cursor:pointer;letter-spacing:1px;transition:all .3s;}
+.btn-j:hover{transform:translateY(-1px);box-shadow:0 0 16px var(--glow);}
+.btn-j:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+/* LIVE BONUS */
+.lbc{border-radius:13px;padding:14px;margin-bottom:12px;position:relative;overflow:hidden;}
+.lbc-off{background:rgba(255,107,53,0.06);border:1px solid rgba(255,107,53,0.2);}
+.lbc-on{background:linear-gradient(135deg,rgba(0,255,136,0.07),rgba(0,212,255,0.05));border:1px solid rgba(0,255,136,0.25);}
+.lbc-title{font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;margin-bottom:3px;display:flex;align-items:center;gap:7px;}
+.lbc-timer{font-family:'Rajdhani',sans-serif;font-size:26px;font-weight:700;color:var(--green);margin:6px 0;}
+.lbc-info{font-size:11px;color:var(--muted);}
+/* QUESTIONS */
+.qc{background:var(--bg3);border:1px solid var(--border);border-radius:13px;padding:14px;margin-bottom:9px;}
+.qc.bonus{border-color:rgba(0,255,136,0.25);background:linear-gradient(135deg,rgba(0,255,136,0.04),rgba(0,212,255,0.03));}
+.qc.score{border-color:rgba(255,215,0,0.22);background:linear-gradient(135deg,rgba(255,215,0,0.04),rgba(255,107,53,0.03));}
+.qbadge{font-size:9px;font-weight:700;padding:2px 7px;border-radius:3px;margin-bottom:7px;display:inline-block;letter-spacing:.5px;}
+.qb-p{background:rgba(0,212,255,0.1);color:var(--neon);}
+.qb-b{background:rgba(0,255,136,0.1);color:var(--green);}
+.qb-s{background:rgba(255,215,0,0.1);color:var(--gold);}
+.qt{font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;margin-bottom:8px;line-height:1.3;}
+.qmeta{font-size:10px;color:var(--orange);margin-bottom:9px;}
+.opts{display:flex;flex-direction:column;gap:6px;}
+.opt{width:100%;padding:9px 12px;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Exo 2',sans-serif;font-size:12px;cursor:pointer;text-align:left;transition:all .3s;display:flex;align-items:center;justify-content:space-between;}
+.opt:hover{border-color:var(--neon);background:rgba(0,212,255,0.05);}
+.opt.sel{border-color:var(--neon);background:rgba(0,212,255,0.1);color:var(--neon);}
+.opt.ok{border-color:var(--green);background:rgba(0,255,136,0.1);color:var(--green);}
+.opt.no{border-color:var(--red);background:rgba(255,59,92,0.08);color:var(--red);opacity:.7;}
+.opt:disabled,.opt[disabled]{cursor:not-allowed;}
+.ans-b{text-align:center;padding:7px;background:rgba(0,255,136,0.07);border:1px solid rgba(0,255,136,0.22);border-radius:7px;color:var(--green);font-size:11px;margin-top:6px;}
+.pts-pill{background:rgba(255,215,0,0.12);color:var(--gold);font-size:9px;font-weight:700;padding:2px 6px;border-radius:3px;}
+/* LEADERBOARD */
+.lb-item{display:flex;align-items:center;gap:10px;padding:11px;background:var(--bg3);border:1px solid var(--border);border-radius:11px;margin-bottom:7px;transition:all .3s;}
+.lb-item.me{border-color:var(--neon);background:rgba(0,212,255,0.05);}
+.lb-r{font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;width:28px;text-align:center;flex-shrink:0;}
+.r1{color:var(--gold);}
+.r2{color:#c0c0c0;}
+.r3{color:#cd7f32;}
+.lb-av{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--neon2),var(--neon));display:flex;align-items:center;justify-content:center;font-weight:700;color:#000;font-size:14px;flex-shrink:0;overflow:hidden;}
+.lb-av img{width:100%;height:100%;object-fit:cover;}
+.lb-info{flex:1;}
+.lb-name{font-size:13px;font-weight:700;}
+.lb-sub{font-size:10px;color:var(--muted);}
+.lb-pts{font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;color:var(--purple);}
+/* POINTS PAGE */
+.pts-hero{background:linear-gradient(135deg,rgba(168,85,247,0.12),rgba(0,212,255,0.08));border:1px solid rgba(168,85,247,0.25);border-radius:16px;padding:20px;text-align:center;margin-bottom:16px;}
+.big-p{font-family:'Rajdhani',sans-serif;font-size:58px;font-weight:700;color:var(--purple);line-height:1;}
+.pts-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;}
+.pb{background:rgba(0,0,0,0.25);border-radius:9px;padding:10px;text-align:center;}
+.pb .v{font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;}
+.pb .l{font-size:9px;color:var(--muted);margin-top:2px;}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
+.ib{background:var(--bg3);border:1px solid var(--border);border-radius:9px;padding:10px;text-align:center;}
+.ib .iv{font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;}
+.ib .il{font-size:9px;color:var(--muted);margin-top:2px;}
+/* WALLET */
+.wc{background:linear-gradient(135deg,#001535,#002550);border:1px solid var(--neon);border-radius:16px;padding:22px;text-align:center;margin-bottom:16px;}
+.wc .lbl{font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;}
+.wc .amt{font-family:'Rajdhani',sans-serif;font-size:40px;font-weight:700;color:var(--gold);line-height:1;margin:5px 0;}
+.w-acts{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:16px;}
+.btn-add{padding:12px;border:none;border-radius:11px;background:linear-gradient(135deg,#006600,var(--green));color:#000;font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;cursor:pointer;}
+.btn-wd{padding:12px;border:none;border-radius:11px;background:linear-gradient(135deg,#8b0000,var(--red));color:#fff;font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;cursor:pointer;}
+.ti{display:flex;align-items:center;justify-content:space-between;padding:11px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;margin-bottom:6px;}
+.ti-i .tt{font-size:12px;font-weight:600;}
+.ti-i .td{font-size:9px;color:var(--muted);margin-top:2px;}
+.ti-a{font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;}
+.cr{color:var(--green);}
+.dr{color:var(--red);}
+/* PROFILE */
+.prc{background:var(--bg3);border:1px solid var(--border);border-radius:14px;padding:20px;text-align:center;margin-bottom:12px;}
+.pr-av{width:66px;height:66px;border-radius:50%;background:linear-gradient(135deg,var(--neon2),var(--neon));display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;color:#000;margin:0 auto 9px;border:3px solid var(--neon);overflow:hidden;}
+.pr-av img{width:100%;height:100%;object-fit:cover;}
+.pr-name{font-family:'Rajdhani',sans-serif;font-size:19px;font-weight:700;}
+.pr-email{font-size:11px;color:var(--muted);margin:2px 0 10px;}
+.pr-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;}
+.prs{background:rgba(0,212,255,0.04);border:1px solid var(--border);border-radius:8px;padding:9px 3px;text-align:center;}
+.prs .sv{font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;color:var(--neon);}
+.prs .sl{font-size:8px;color:var(--muted);margin-top:2px;}
+.btn-out{width:100%;padding:11px;background:rgba(255,59,92,0.08);border:1px solid var(--red);border-radius:10px;color:var(--red);font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;cursor:pointer;margin-top:10px;transition:all .3s;}
+.btn-out:hover{background:var(--red);color:#fff;}
+/* PH */
+.ph-item{display:flex;align-items:center;justify-content:space-between;padding:9px 11px;background:var(--bg3);border:1px solid var(--border);border-radius:9px;margin-bottom:6px;}
+.ph-i .pt{font-size:12px;font-weight:600;}
+.ph-i .pd{font-size:9px;color:var(--muted);margin-top:1px;}
+.ph-p{font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;color:var(--purple);}
+/* MODALS */
+.mov{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.78);backdrop-filter:blur(7px);z-index:200;align-items:center;justify-content:center;padding:14px;}
+.mov.open{display:flex;}
+.modal{background:#0a1628;border:1px solid var(--border);border-radius:16px;padding:22px 18px;width:100%;max-width:420px;box-shadow:0 0 40px rgba(0,212,255,0.1);max-height:90vh;overflow-y:auto;}
+.modal h3{font-family:'Rajdhani',sans-serif;font-size:19px;font-weight:700;margin-bottom:16px;color:var(--neon);}
+.qrb{text-align:center;padding:14px;background:rgba(0,212,255,0.03);border:1px solid var(--border);border-radius:11px;margin-bottom:12px;}
+.upi-id{font-family:'Rajdhani',sans-serif;font-size:13px;color:var(--neon);font-weight:600;margin-top:7px;}
+.min-n{font-size:10px;color:var(--orange);margin:4px 0 0;font-weight:600;}
+.mbtns{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;}
+.btn-c{padding:10px;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:8px;color:var(--muted);font-family:'Exo 2',sans-serif;font-size:12px;cursor:pointer;}
+.btn-ok{padding:10px;background:linear-gradient(135deg,var(--neon2),var(--neon));border:none;border-radius:8px;color:#000;font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;cursor:pointer;}
+/* QUIZ MODAL */
+.qp-bar{height:5px;background:rgba(255,255,255,0.07);border-radius:3px;margin-bottom:4px;overflow:hidden;}
+.qp-fill{height:100%;background:linear-gradient(90deg,var(--neon2),var(--neon));border-radius:3px;transition:width .4s ease;}
+.qp-num{font-size:10px;color:var(--muted);text-align:right;margin-bottom:12px;}
+.quiz-done{background:rgba(0,255,136,0.07);border:1px solid rgba(0,255,136,0.22);border-radius:10px;padding:14px;text-align:center;margin-bottom:12px;}
+/* CHATBOT */
+#chatbot-btn{position:fixed;bottom:82px;right:13px;z-index:150;width:48px;height:48px;background:linear-gradient(135deg,var(--neon2),var(--neon));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:0 4px 16px var(--glow);cursor:pointer;border:none;transition:transform .3s;}
+#chatbot-btn:hover{transform:scale(1.1);}
+#chat-window{display:none;position:fixed;bottom:140px;right:13px;z-index:149;width:300px;max-height:420px;background:#0a1628;border:1px solid var(--border);border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,0.5);overflow:hidden;flex-direction:column;}
+#chat-window.open{display:flex;}
+.chat-hdr{background:linear-gradient(135deg,var(--neon2),var(--neon));padding:12px 14px;display:flex;align-items:center;justify-content:space-between;}
+.chat-hdr span{font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;color:#000;}
+.chat-close{background:none;border:none;color:#000;font-size:18px;cursor:pointer;padding:0;}
+.chat-msgs{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px;min-height:200px;}
+.chat-msg{max-width:85%;padding:8px 11px;border-radius:10px;font-size:12px;line-height:1.4;}
+.chat-msg.admin{background:rgba(0,212,255,0.1);border:1px solid var(--border);color:var(--text);align-self:flex-start;border-radius:3px 10px 10px 10px;}
+.chat-msg.user{background:linear-gradient(135deg,var(--neon2),var(--neon));color:#000;align-self:flex-end;border-radius:10px 3px 10px 10px;}
+.chat-msg .cm-time{font-size:9px;opacity:.6;margin-top:3px;}
+.chat-input-row{display:flex;gap:6px;padding:10px 12px;border-top:1px solid var(--border);}
+.chat-input{flex:1;padding:8px 10px;background:rgba(0,212,255,0.05);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Exo 2',sans-serif;font-size:12px;outline:none;}
+.chat-send{padding:8px 12px;background:linear-gradient(135deg,var(--neon2),var(--neon));border:none;border-radius:8px;color:#000;font-size:14px;cursor:pointer;font-weight:700;}
+.chat-typing{font-size:11px;color:var(--muted);padding:0 12px 8px;display:none;}
+/* BQ TIMER */
+.bq-timer{display:flex;flex-direction:column;align-items:center;gap:3px;flex-shrink:0;margin-right:4px;}
+.bq-timer-ring{position:relative;width:48px;height:48px;}
+.bq-timer-ring svg{display:block;}
+.bq-timer-text{text-align:center;}
+.bq-t-num{font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;color:var(--red);line-height:1;}
+.bq-t-lbl{font-size:8px;color:var(--muted);letter-spacing:.5px;}
+/* INSTALL BTN */
+#inst-btn{display:none;position:fixed;top:66px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--neon2),var(--neon));color:#000;border:none;border-radius:16px;padding:6px 16px;font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;cursor:pointer;z-index:99;white-space:nowrap;letter-spacing:1px;box-shadow:0 0 12px var(--glow);}
+/* EMPTY */
+.empty{text-align:center;padding:32px 14px;color:var(--muted);}
+.empty .ei{font-size:40px;margin-bottom:8px;opacity:.5;}
+/* LDOTS */
+.ld{display:inline-flex;gap:3px;}
+.ld span{width:5px;height:5px;border-radius:50%;background:var(--neon);animation:bl 1.2s infinite;}
+.ld span:nth-child(2){animation-delay:.2s}
+.ld span:nth-child(3){animation-delay:.4s}
+@keyframes bl{0%,100%{opacity:.2}50%{opacity:1}}
+/* TOAST */
+#toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:rgba(10,22,48,0.97);border:1px solid var(--border);border-radius:10px;padding:10px 16px;font-size:12px;z-index:999;display:none;max-width:290px;text-align:center;}
+#toast.show{display:block;animation:su .3s ease;}
+@keyframes su{from{transform:translateX(-50%) translateY(14px);opacity:0}to{transform:translateX(-50%) translateY(0);opacity:1}}
+::-webkit-scrollbar{width:3px;}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
+</style>
+</head>
+<body>
+
+<!-- AUTH -->
+<div id="auth-screen" class="screen" style="display:flex">
+  <div class="a-logo"><div class="ico">🏏</div><h1>SMART 11</h1><p>Cricket Prediction Platform</p></div>
+  <div class="a-box">
+    <div class="tabs">
+      <button class="tab on" id="tl" onclick="stab('login')">LOGIN</button>
+      <button class="tab" id="ts" onclick="stab('signup')">SIGN UP</button>
+    </div>
+    <div id="lf">
+      <div class="ig"><label>Email</label><input type="email" id="le" placeholder="your@email.com"/></div>
+      <div class="ig"><label>Password</label><input type="password" id="lp" placeholder="••••••••"/></div>
+      <button class="btn-m" onclick="doLogin()">LOGIN →</button>
+      <div class="div-or">OR</div>
+      <button class="btn-g" onclick="doGoogle()"><img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18"/>Continue with Google</button>
+    </div>
+    <div id="sf" style="display:none">
+      <div class="ig"><label>Full Name</label><input type="text" id="sn" placeholder="Your Name"/></div>
+      <div class="ig"><label>Email</label><input type="email" id="se" placeholder="your@email.com"/></div>
+      <div class="ig"><label>Password</label><input type="password" id="sp" placeholder="Min 6 characters"/></div>
+      <button class="btn-m" onclick="doSignup()">CREATE ACCOUNT →</button>
+      <div class="div-or">OR</div>
+      <button class="btn-g" onclick="doGoogle()"><img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18"/>Sign up with Google</button>
+      <div class="bonus-b">🎁 ₹50 Cash + 50 Bonus Points on Signup!</div>
+    </div>
+    <div class="err" id="aerr"></div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div id="main-screen" class="screen" style="display:none">
+  <div id="navbar">
+    <div class="n-logo">🏏 SMART 11</div>
+    <div class="n-right">
+      <div class="n-chip n-pts" onclick="goPage('points')">⭐<span id="npts">0</span></div>
+      <div class="n-chip n-bal" onclick="goPage('wallet')">💰<span id="nbal">₹0</span></div>
+      <div class="n-av" id="nav-av" onclick="goPage('profile')">U</div>
+    </div>
+  </div>
+
+  <!-- HOME -->
+  <div class="page on" id="page-home">
+    <div class="hero">
+      <h2>🔥 Win Big Today!</h2>
+      <p>Answer questions, earn points & win real prizes</p>
+      <span class="tag">💰 Prize Pools up to ₹10,000</span>
+    </div>
+    <div id="live-bonus-ui"></div>
+    <div class="sh"><h3>🏆 Live Contests</h3><span class="live-dot">● LIVE</span></div>
+    <div id="pools-list"><div class="empty"><div class="ei">⏳</div><div class="ld"><span></span><span></span><span></span></div></div></div>
+    <div class="sh"><h3>🏅 Top Players</h3></div>
+    <div id="lb-home"></div>
+  </div>
+
+  <!-- QUESTIONS -->
+  <div class="page" id="page-qs">
+    <div class="sh"><h3>⭐ Bonus Questions</h3><span style="font-size:10px;color:var(--green)">+5 pts each</span></div>
+    <div id="bqs-list"><div class="empty"><div class="ei">🎯</div><p>No bonus questions right now</p></div></div>
+    <div class="sh" style="margin-top:16px"><h3>🎯 Score Predictions</h3><span style="font-size:10px;color:var(--gold)">5-20 pts</span></div>
+    <div id="sqs-list"><div class="empty"><div class="ei">📊</div><p>No score questions yet</p></div></div>
+  </div>
+
+  <!-- LEADERBOARD -->
+  <div class="page" id="page-lb">
+    <div class="sh"><h3>🏅 Leaderboard</h3></div>
+    <div id="lb-full"><div class="empty"><div class="ei">🏅</div><div class="ld"><span></span><span></span><span></span></div></div></div>
+  </div>
+
+  <!-- POINTS -->
+  <div class="page" id="page-points">
+    <div class="pts-hero">
+      <div style="font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase">Total Points</div>
+      <div class="big-p" id="pts-big">0</div>
+      <div style="font-size:10px;color:var(--muted);margin-top:3px">SMART POINTS</div>
+      <div class="pts-grid">
+        <div class="pb"><div class="v" style="color:var(--neon)" id="p-pm">0</div><div class="l">Pre-Match</div></div>
+        <div class="pb"><div class="v" style="color:var(--green)" id="p-bq">0</div><div class="l">Bonus Q</div></div>
+        <div class="pb"><div class="v" style="color:var(--orange)" id="p-lv">0</div><div class="l">Live Time</div></div>
+        <div class="pb"><div class="v" style="color:var(--gold)" id="p-sq">0</div><div class="l">Score Q</div></div>
+      </div>
+    </div>
+    <div class="sh"><h3>📋 How to Earn</h3></div>
+    <div class="info-grid">
+      <div class="ib"><div class="iv" style="color:var(--neon)">10 pts</div><div class="il">Pre-match correct answer</div></div>
+      <div class="ib"><div class="iv" style="color:var(--green)">5 pts</div><div class="il">Bonus question correct</div></div>
+      <div class="ib"><div class="iv" style="color:var(--orange)">1 pt</div><div class="il">Every 5 min live</div></div>
+      <div class="ib"><div class="iv" style="color:var(--gold)">5-20 pts</div><div class="il">Score prediction</div></div>
+    </div>
+    <div class="sh"><h3>📜 Points History</h3></div>
+    <div id="pts-hist"><div class="empty"><div class="ei">📋</div><p>No points earned yet</p></div></div>
+  </div>
+
+  <!-- WALLET -->
+  <div class="page" id="page-wallet">
+    <div class="wc">
+      <div class="lbl">Total Balance</div>
+      <div class="amt" id="wal-amt">₹0.00</div>
+      <div style="font-size:10px;color:var(--muted);margin-top:2px">Bonus: <span id="bon-amt" style="color:var(--green)">₹0</span></div>
+    </div>
+    <div class="w-acts">
+      <button class="btn-add" onclick="openDep()">+ Add Money</button>
+      <button class="btn-wd" onclick="openWd()">↑ Withdraw</button>
+    </div>
+    <div class="sh"><h3>📋 Transactions</h3></div>
+    <div id="txn-list"><div class="empty"><div class="ei">📂</div><p>No transactions yet</p></div></div>
+  </div>
+
+  <!-- PROFILE -->
+  <div class="page" id="page-profile">
+    <div class="prc">
+      <div class="pr-av" id="pr-av">U</div>
+      <div class="pr-name" id="pr-name">User</div>
+      <div class="pr-email" id="pr-email"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="394c4a5c4b795c54585055175a5654">[email&#160;protected]</a></div>
+      <div class="pr-stats">
+        <div class="prs"><div class="sv" style="color:var(--purple)" id="st-p">0</div><div class="sl">Points</div></div>
+        <div class="prs"><div class="sv" id="st-b">₹0</div><div class="sl">Balance</div></div>
+        <div class="prs"><div class="sv" id="st-c">0</div><div class="sl">Contests</div></div>
+        <div class="prs"><div class="sv" style="color:var(--green)" id="st-w">0</div><div class="sl">Wins</div></div>
+      </div>
+      <button class="btn-out" onclick="doLogout()">🚪 LOGOUT</button>
+    </div>
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <div id="botnav">
+    <button class="bn on" id="bn-home" onclick="goPage('home')"><div class="bi">🏠</div>Home</button>
+    <button class="bn" id="bn-qs" onclick="goPage('qs')"><div class="bi">❓</div>Questions<span class="bn-badge" id="bq-badge" style="display:none">!</span></button>
+    <button class="bn" id="bn-lb" onclick="goPage('lb')"><div class="bi">🏅</div>Rank</button>
+    <button class="bn" id="bn-points" onclick="goPage('points')"><div class="bi">⭐</div>Points</button>
+    <button class="bn" id="bn-wallet" onclick="goPage('wallet')"><div class="bi">💰</div>Wallet</button>
+  </div>
+</div>
+
+<!-- MODALS -->
+<!-- QUIZ -->
+<div class="mov" id="quiz-modal">
+  <div class="modal">
+    <h3 id="quiz-title">📝 Pre-Match Quiz</h3>
+    <div class="qp-bar"><div class="qp-fill" id="qpf" style="width:0%"></div></div>
+    <div class="qp-num" id="qpn">0/10</div>
+    <div id="quiz-body"></div>
+    <div id="quiz-done" style="display:none">
+      <div class="quiz-done">
+        <div style="font-size:28px;margin-bottom:4px">🎉</div>
+        <div style="font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;color:var(--green)">Quiz Complete!</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:3px">Earned <span id="q-pts" style="color:var(--purple);font-weight:700">0</span> points!</div>
+      </div>
+      <button class="btn-ok" style="width:100%;padding:12px;font-size:15px" onclick="proceedJoin()">✅ Join Contest →</button>
+    </div>
+  </div>
+</div>
+<!-- DEPOSIT -->
+<div class="mov" id="dep-modal">
+  <div class="modal">
+    <h3>💳 Add Money</h3>
+    <div class="qrb">
+      <svg width="130" height="130" viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg" style="background:#fff;padding:7px;border-radius:7px">
+        <rect x="8" y="8" width="46" height="46" fill="none" stroke="#000" stroke-width="4"/><rect x="16" y="16" width="30" height="30" fill="#000"/>
+        <rect x="86" y="8" width="46" height="46" fill="none" stroke="#000" stroke-width="4"/><rect x="94" y="16" width="30" height="30" fill="#000"/>
+        <rect x="8" y="86" width="46" height="46" fill="none" stroke="#000" stroke-width="4"/><rect x="16" y="94" width="30" height="30" fill="#000"/>
+        <rect x="86" y="86" width="10" height="10" fill="#000"/><rect x="100" y="86" width="10" height="10" fill="#000"/>
+        <rect x="114" y="86" width="18" height="10" fill="#000"/><rect x="86" y="100" width="10" height="10" fill="#000"/>
+        <rect x="100" y="100" width="10" height="10" fill="#000"/><rect x="86" y="114" width="10" height="18" fill="#000"/>
+        <rect x="100" y="114" width="18" height="10" fill="#000"/><rect x="114" y="100" width="18" height="10" fill="#000"/>
+        <rect x="60" y="8" width="8" height="8" fill="#000"/><rect x="60" y="20" width="8" height="8" fill="#000"/>
+        <rect x="8" y="60" width="48" height="8" fill="#000"/><rect x="60" y="60" width="8" height="8" fill="#000"/>
+        <rect x="72" y="60" width="8" height="8" fill="#000"/>
+      </svg>
+      <div class="upi-id">📱 rishabhsisodiya1998@ybl</div>
+      <div style="margin-top:5px"><a href="upi://pay?pa=rishabhsisodiya1998@ybl&pn=Smart11" style="color:var(--neon);font-size:11px;text-decoration:none">📲 Tap to Pay via UPI</a></div>
+      <div class="min-n">⚠️ Minimum Deposit: ₹500</div>
+    </div>
+    <div class="ig"><label>Amount (₹)</label><input type="number" id="d-amt" placeholder="Min ₹500" min="500"/></div>
+    <div class="ig"><label>UTR / Transaction ID</label><input type="text" id="d-utr" placeholder="12-digit UTR Number"/></div>
+    <div class="err" id="d-err"></div>
+    <div class="mbtns">
+      <button class="btn-c" onclick="cm('dep-modal')">Cancel</button>
+      <button class="btn-ok" onclick="submitDep()">Submit →</button>
+    </div>
+  </div>
+</div>
+<!-- WITHDRAW -->
+<div class="mov" id="wd-modal">
+  <div class="modal">
+    <h3>💸 Withdraw</h3>
+    <div class="ig"><label>Amount (₹)</label><input type="number" id="w-amt" placeholder="Min ₹100"/></div>
+    <div class="ig"><label>UPI ID</label><input type="text" id="w-upi" placeholder="your@upi"/></div>
+    <div class="err" id="w-err"></div>
+    <div class="mbtns">
+      <button class="btn-c" onclick="cm('wd-modal')">Cancel</button>
+      <button class="btn-ok" onclick="submitWd()">Request →</button>
+    </div>
+  </div>
+</div>
+<!-- JOIN -->
+<div class="mov" id="join-modal">
+  <div class="modal">
+    <h3>🏆 Join Contest</h3>
+    <div id="join-det" style="background:rgba(0,212,255,0.03);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:12px;"></div>
+    <div class="err" id="j-err"></div>
+    <div class="mbtns">
+      <button class="btn-c" onclick="cm('join-modal')">Cancel</button>
+      <button class="btn-ok" onclick="confirmJoin()">Pay & Join →</button>
+    </div>
+  </div>
+</div>
+
+<!-- CHATBOT -->
+<button id="chatbot-btn" onclick="toggleChat()">💬</button>
+<div id="chat-window">
+  <div class="chat-hdr">
+    <span>💬 Smart 11 Support</span>
+    <button class="chat-close" onclick="toggleChat()">✕</button>
+  </div>
+  <div class="chat-msgs" id="chat-msgs">
+    <div class="chat-msg admin">👋 Hello! I'm Smart 11 Support. How can I help you?<div class="cm-time">Just now</div></div>
+    <div class="chat-msg admin">You can ask about: points, contests, deposits, withdrawals, or type anything to chat with our admin!<div class="cm-time">Just now</div></div>
+  </div>
+  <div class="chat-typing" id="chat-typing">Admin is typing...</div>
+  <div class="chat-input-row">
+    <input class="chat-input" id="chat-inp" placeholder="Type a message..." onkeydown="if(event.key==='Enter')sendMsg()"/>
+    <button class="chat-send" onclick="sendMsg()">➤</button>
+  </div>
+</div>
+
+<div id="toast"></div>
+<button id="inst-btn" onclick="installApp()">📲 Install App</button>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script type="module">
+import{initializeApp}from'https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js';
+import{getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,onAuthStateChanged,signOut,GoogleAuthProvider,signInWithRedirect,getRedirectResult}from'https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js';
+import{getFirestore,doc,setDoc,getDoc,updateDoc,collection,addDoc,onSnapshot,query,orderBy,serverTimestamp,increment,getDocs,limit,where,writeBatch}from'https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js';
+
+const FC={apiKey:'AIzaSyAuHRYir6InqqugDCIfg-OCKwp-HUdE-jA',authDomain:'crick-e0b9b.firebaseapp.com',projectId:'crick-e0b9b',storageBucket:'crick-e0b9b.firebasestorage.app',messagingSenderId:'369804849061',appId:'1:369804849061:web:90d55833e305d1025b024c'};
+const app=initializeApp(FC);
+const auth=getAuth(app);
+const db=getFirestore(app);
+
+let CU=null,UD=null,SP=null,bqUnsub=null,sqUnsub=null,chatUnsub=null;
+const sN=()=>String(UD?.name||CU?.displayName||CU?.email?.split('@')[0]||'User');
+const sE=()=>String(CU?.email||'');
+const sU=()=>String(CU?.uid||'');
+const WL=()=>Number(UD?.wallet||0);
+const PTS=()=>Number(UD?.points||0);
+
+// ===== AUTH STATE =====
+onAuthStateChanged(auth,async u=>{
+  if(u){CU=u;await loadUD();showMain();loadPools();listenBQ();listenSQ();loadLB('lb-home',3);startLBCheck();}
+  else{CU=null;UD=null;document.getElementById('auth-screen').style.display='flex';document.getElementById('main-screen').style.display='none';}
+});
+getRedirectResult(auth).then(async r=>{if(r?.user)await handleGU(r.user);}).catch(()=>{});
+
+// ===== LOAD USER =====
+async function loadUD(){
+  try{
+    const s=await getDoc(doc(db,'users',CU.uid));
+    if(s.exists()){UD=s.data();}
+    else{
+      const nm=String(CU.displayName||CU.email?.split('@')[0]||'User');
+      const em=String(CU.email||'');
+      const nu={name:nm,email:em,photoURL:String(CU.photoURL||''),wallet:50,bonus:50,points:50,pb:{pm:0,bq:0,lv:0,sq:0,su:50},contestsJoined:0,wins:0,createdAt:serverTimestamp()};
+      await setDoc(doc(db,'users',CU.uid),nu);
+      await addDoc(collection(db,'users',CU.uid,'txns'),{type:'credit',title:'🎁 Signup Bonus',amount:50,status:'completed',createdAt:serverTimestamp()});
+      await addDoc(collection(db,'users',CU.uid,'ph'),{type:'su',title:'🎁 Signup Bonus',pts:50,createdAt:serverTimestamp()});
+      UD={...nu,wallet:50,bonus:50,points:50};
+    }
+    updateUI();
+  }catch(e){console.error(e);}
+}
+
+function updateUI(){
+  if(!UD)return;
+  const b=WL().toFixed(2),p=PTS();
+  document.getElementById('nbal').textContent='₹'+b;
+  document.getElementById('npts').textContent=p;
+  document.getElementById('wal-amt').textContent='₹'+b;
+  document.getElementById('bon-amt').textContent='₹'+(UD.bonus||0);
+  document.getElementById('pts-big').textContent=p;
+  document.getElementById('p-pm').textContent=UD.pb?.pm||0;
+  document.getElementById('p-bq').textContent=UD.pb?.bq||0;
+  document.getElementById('p-lv').textContent=UD.pb?.lv||0;
+  document.getElementById('p-sq').textContent=UD.pb?.sq||0;
+  document.getElementById('st-p').textContent=p;
+  document.getElementById('st-b').textContent='₹'+b;
+  document.getElementById('st-c').textContent=UD.contestsJoined||0;
+  document.getElementById('st-w').textContent=UD.wins||0;
+  const nm=UD.name||'User',ph=UD.photoURL,ini=nm.charAt(0).toUpperCase();
+  ['nav-av','pr-av'].forEach(id=>{const el=document.getElementById(id);if(ph){el.innerHTML=`<img src="${ph}"/>`;}else el.textContent=ini;});
+  document.getElementById('pr-name').textContent=nm;
+  document.getElementById('pr-email').textContent=CU?.email||'';
+  loadPH();
+}
+
+async function awardPts(pts,type,title){
+  if(!CU||!pts)return;
+  try{
+    await updateDoc(doc(db,'users',CU.uid),{points:increment(pts),['pb.'+type]:increment(pts)});
+    await addDoc(collection(db,'users',CU.uid,'ph'),{type,title,pts,createdAt:serverTimestamp()});
+    UD.points=(UD.points||0)+pts;
+    if(!UD.pb)UD.pb={};
+    UD.pb[type]=(UD.pb[type]||0)+pts;
+    updateUI();
+    toast('⭐ +'+pts+' pts! '+title,'var(--purple)');
+  }catch(e){}
+}
+
+// ===== LIVE BONUS =====
+function startLBCheck(){checkLB();setInterval(checkLB,60000);}
+async function checkLB(){
+  try{
+    const s=await getDoc(doc(db,'settings','liveBonus'));
+    if(!s.exists()||!s.data().active){document.getElementById('live-bonus-ui').innerHTML='';return;}
+    const d=s.data();
+    const now=new Date();
+    const st=d.startTime?.toDate?d.startTime.toDate():null;
+    const en=d.endTime?.toDate?d.endTime.toDate():null;
+    if(!st||!en){document.getElementById('live-bonus-ui').innerHTML='';return;}
+    if(now>=st&&now<=en){
+      const key='lb_'+( d.matchId||'m');
+      const last=parseInt(localStorage.getItem(key)||'0');
+      if(Date.now()-last>=5*60*1000){
+        localStorage.setItem(key,Date.now()+'');
+        await awardPts(1,'lv','⚡ Live Bonus (5 min)');
+      }
+      renderLBActive(en,d.matchName||'Live Match');
+    } else if(now<st){renderLBSoon(st,d.matchName||'Match');
+    } else {document.getElementById('live-bonus-ui').innerHTML='';}
+  }catch(e){}
+}
+
+function renderLBActive(end,mn){
+  const el=document.getElementById('live-bonus-ui');
+  const tick=()=>{
+    const r=Math.max(0,end-new Date());
+    const m=Math.floor(r/60000),s=Math.floor((r%60000)/1000);
+    el.innerHTML=`<div class="lbc lbc-on"><div class="lbc-title"><span class="live-dot">●</span> Live Bonus Active!</div><div style="font-size:11px;color:var(--muted);margin-bottom:4px">🏏 ${mn}</div><div class="lbc-timer">${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}</div><div class="lbc-info">⭐ +1 point every 5 min you're active!</div></div>`;
+    if(r>0)setTimeout(tick,1000);else el.innerHTML='';
+  };tick();
+}
+
+function renderLBSoon(st,mn){
+  const diff=st-new Date();
+  if(diff<0){document.getElementById('live-bonus-ui').innerHTML='';return;}
+  const h=Math.floor(diff/3600000),m=Math.floor((diff%3600000)/60000);
+  document.getElementById('live-bonus-ui').innerHTML=`<div class="lbc lbc-off"><div class="lbc-title">🕐 Live Bonus Starting Soon</div><div style="font-size:11px;color:var(--muted)">🏏 ${mn}</div><div style="font-size:12px;color:var(--orange);margin-top:6px">⏳ Starts in ${h}h ${m}m — Stay active!</div></div>`;
+}
+
+// ===== POOLS =====
+async function loadPools(){
+  const el=document.getElementById('pools-list');
+  try{
+    const s=await getDocs(collection(db,'pools'));
+    // Get settings for dummy users
+    const stSnap=await getDoc(doc(db,'settings','platform'));
+    const dummyOn=stSnap.exists()&&stSnap.data().dummyUsers!==false;
+    if(s.empty){el.innerHTML='<div class="empty" style="padding:50px 20px"><div class="ei">🏏</div><p style="font-size:14px;font-weight:600;color:var(--text);margin-top:8px">Koi contest abhi active nahi hai</p><p style="font-size:11px;color:var(--muted);margin-top:5px">Admin jald hi naya contest add karega. Stay tuned!</p></div>';return;}
+    el.innerHTML='';
+    s.forEach(d=>{
+      const p=d.data();
+      if(p.status==='closed')return;
+      el.innerHTML+=mkPC(d.id,p.name,p.fee,p.prize||0,p.users||0,p.maxUsers||200,p.description||'',dummyOn);
+    });
+    if(!el.innerHTML)el.innerHTML='<div class="empty"><div class="ei">🏏</div><p>No active contests</p></div>';
+  }catch(e){el.innerHTML='<div class="empty"><div class="ei">⚠️</div><p>'+e.message+'</p></div>';}
+}
+
+function mkPC(id,name,fee,prize,users,max,desc,dummy){
+  const DUMMY=82;
+  const disp=dummy?users+DUMMY:users;
+  const total=dummy?max+DUMMY:max;
+  const pct=Math.min(92,Math.round((users/max)*100));
+  return`<div class="pc">
+    <div class="pc-h"><span class="pc-name">🏏 ${name}</span><span class="pc-fee">₹${fee}</span></div>
+    <div class="pc-stats"><span>👥 <b>${disp}</b> Joined</span><span>🏆 <b>₹${prize.toLocaleString()}</b> Prize</span><span>🎯 <b>${total}</b> Max</span></div>
+    <div class="pc-ptag">📝 Answer 10 questions to join → Earn up to 100 pts!</div>
+    ${desc?`<div style="font-size:10px;color:var(--muted);margin-bottom:5px">${desc}</div>`:''}
+    <div class="prog"><div class="prog-f" style="width:${pct}%"></div></div>
+    <button class="btn-j" onclick="startQuiz('${id}','${name.replace(/'/g,"\\'")}',${fee},${prize})">📝 Quiz & Join →</button>
+  </div>`;
+}
+
+// ===== PRE-MATCH QUIZ =====
+let QD={};
+window.startQuiz=async function(pid,pname,fee,prize){
+  SP={id:pid,name:pname,fee,prize};
+  const done=localStorage.getItem('qz_'+pid+'_'+CU?.uid);
+  if(done){openJoinDlg();return;}
+  try{
+    let qs=[];
+    if(!['d1','d2','d3'].includes(pid)){
+      const ps=await getDoc(doc(db,'pools',pid));
+      if(ps.exists()&&ps.data().questions?.length)qs=ps.data().questions;
+    }
+    if(!qs.length)qs=defQs(pname);
+    QD={pid,pname,qs:qs.slice(0,10),cur:0,score:0,ans:{}};
+    document.getElementById('quiz-title').textContent='🏏 '+pname;
+    document.getElementById('quiz-done').style.display='none';
+    renderQQ();
+    document.getElementById('quiz-modal').classList.add('open');
+  }catch(e){openJoinDlg();}
+};
+
+function defQs(n){
+  return[
+    {q:'Who will win the toss?',opts:['Team A','Team B','No Prediction'],correct:null,pts:10},
+    {q:'Which team will bat first?',opts:['Team A','Team B','Toss Winner'],correct:null,pts:10},
+    {q:'Will a century be scored?',opts:['Yes','No'],correct:null,pts:10},
+    {q:'Total sixes in the match?',opts:['0-5','6-10','11-15','15+'],correct:null,pts:10},
+    {q:'Wicket in first over?',opts:['Yes','No'],correct:null,pts:10},
+    {q:'Match result type?',opts:['Bat first wins','Bowl first wins','Super Over'],correct:null,pts:10},
+    {q:'Top scorer position?',opts:['Opener','#3-#5','#6+'],correct:null,pts:10},
+    {q:'Total wickets?',opts:['< 10','10-15','16-20','All out (20)'],correct:null,pts:10},
+    {q:'Will there be a hat-trick?',opts:['Yes','No'],correct:null,pts:10},
+    {q:'Man of the Match?',opts:['Batsman','Bowler','All-rounder'],correct:null,pts:10},
+  ];
+}
+
+function renderQQ(){
+  const q=QD.qs[QD.cur];
+  const tot=QD.qs.length;
+  document.getElementById('qpf').style.width=((QD.cur/tot)*100)+'%';
+  document.getElementById('qpn').textContent=(QD.cur+1)+'/'+tot;
+  if(!q){finishQuiz();return;}
+  const ans=QD.ans[QD.cur];
+  const opts=q.opts.map((o,i)=>{
+    let cls='opt';
+    if(ans!==undefined){
+      if(q.correct===null||q.correct===undefined)cls+=i===ans?' sel':'';
+      else if(i===q.correct)cls+=' ok';
+      else if(i===ans)cls+=' no';
+    }
+    return`<button class="${cls}" onclick="pickOpt(${i})" ${ans!==undefined?'disabled':''}>${o}</button>`;
+  }).join('');
+  const fb=ans!==undefined?`<div class="ans-b">${q.correct===null||q.correct===undefined?'✅ Saved +'+( q.pts||10)+' pts':ans===q.correct?'🎉 Correct! +'+(q.pts||10)+' pts':'❌ Wrong — result known after match'}</div>`:'';
+  document.getElementById('quiz-body').innerHTML=`<div class="qc"><span class="qbadge qb-p">PRE-MATCH Q${QD.cur+1}</span><div class="qt">${q.q}</div><div class="qmeta">⭐ ${q.pts||10} pts</div><div class="opts">${opts}</div>${fb}</div>`;
+}
+
+window.pickOpt=async function(i){
+  const q=QD.qs[QD.cur];
+  if(QD.ans[QD.cur]!==undefined)return;
+  QD.ans[QD.cur]=i;
+  const ok=q.correct===null||q.correct===undefined||i===q.correct;
+  if(ok){QD.score+=(q.pts||10);await awardPts(q.pts||10,'pm','✅ Pre-Match Q'+(QD.cur+1)+' correct');}
+  renderQQ();
+  setTimeout(()=>{QD.cur++;if(QD.cur>=QD.qs.length)finishQuiz();else renderQQ();},1100);
+};
+
+function finishQuiz(){
+  document.getElementById('quiz-body').innerHTML='';
+  document.getElementById('quiz-done').style.display='block';
+  document.getElementById('qpf').style.width='100%';
+  document.getElementById('qpn').textContent=QD.qs.length+'/'+QD.qs.length;
+  document.getElementById('q-pts').textContent=QD.score;
+  localStorage.setItem('qz_'+QD.pid+'_'+CU.uid,'1');
+}
+
+window.proceedJoin=function(){cm('quiz-modal');openJoinDlg();};
+
+function openJoinDlg(){
+  if(!SP)return;
+  document.getElementById('join-det').innerHTML=`<b style="font-family:'Rajdhani',sans-serif;font-size:15px">${SP.name}</b><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:7px"><span>Entry Fee</span><span style="color:var(--red);font-weight:700">-₹${SP.fee}</span></div><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:4px"><span>Prize</span><span style="color:var(--gold);font-weight:700">₹${SP.prize?.toLocaleString()}</span></div><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:4px"><span>Your Balance</span><span style="color:var(--green);font-weight:700">₹${WL().toFixed(2)}</span></div><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:4px"><span>Your Points</span><span style="color:var(--purple);font-weight:700">⭐ ${PTS()}</span></div>`;
+  document.getElementById('j-err').textContent='';
+  document.getElementById('join-modal').classList.add('open');
+}
+
+window.confirmJoin=async function(){
+  if(!SP||!CU)return;
+  if(WL()<SP.fee){document.getElementById('j-err').textContent='Insufficient balance! Need ₹'+SP.fee;return;}
+  try{
+    await updateDoc(doc(db,'users',CU.uid),{wallet:increment(-SP.fee),contestsJoined:increment(1)});
+    if(!['d1','d2','d3'].includes(SP.id))await addDoc(collection(db,'pools',SP.id,'entries'),{uid:sU(),name:sN(),points:PTS(),fee:SP.fee,createdAt:serverTimestamp()});
+    await addDoc(collection(db,'users',CU.uid,'txns'),{type:'debit',title:'🏏 Joined: '+SP.name,amount:Number(SP.fee),status:'completed',createdAt:serverTimestamp()});
+    UD.wallet=(UD.wallet||0)-SP.fee;UD.contestsJoined=(UD.contestsJoined||0)+1;
+    updateUI();cm('join-modal');toast('🎉 Joined! Good luck!','var(--green)');
+  }catch(e){document.getElementById('j-err').textContent=e.message;}
+};
+
+// ===== BONUS QUESTIONS =====
+function listenBQ(){
+  if(bqUnsub)bqUnsub();
+  bqUnsub=onSnapshot(collection(db,'bonusQuestions'),s=>{
+    const el=document.getElementById('bqs-list');
+    let count=0;
+    if(s.empty){el.innerHTML='<div class="empty"><div class="ei">🎯</div><p>No bonus questions right now</p></div>';document.getElementById('bq-badge').style.display='none';return;}
+    el.innerHTML='';
+    s.forEach(d=>{
+      const q=d.data();
+      const ans=UD?.bqa?.[d.id];
+      if(ans===undefined&&!q.settled)count++;
+      el.innerHTML+=mkBQ(d.id,q,ans);
+    });
+    const bb=document.getElementById('bq-badge');
+    if(count>0){bb.textContent=count;bb.style.display='block';}else bb.style.display='none';
+    startBQTimers();
+  });
+}
+
+function mkBQ(id,q,ans){
+  const opts=(q.options||[]).map((o,i)=>{
+    let cls='opt';
+    if(ans!==undefined){if(q.settled){if(i===q.correctOpt)cls+=' ok';else if(i===ans)cls+=' no';}else if(i===ans)cls+=' sel';}
+    const ck=q.settled&&i===q.correctOpt?'<span style="color:var(--green);font-size:10px">✓ +5</span>':'';
+    return`<button class="${cls}" onclick="ansBQ('${id}',${i})" ${ans!==undefined||q.settled?'disabled':''}>${o}${ck}</button>`;
+  }).join('');
+  let fb='';
+  if(ans!==undefined){
+    if(q.settled)fb=ans===q.correctOpt?`<div class="ans-b">🎉 Correct! +5 points!</div>`:`<div class="ans-b" style="border-color:var(--red);color:var(--red)">❌ Wrong. Correct: ${(q.options||[])[q.correctOpt]||'—'}</div>`;
+    else fb=`<div class="ans-b">✅ Saved — Result aayega match ke baad!</div>`;
+  }
+  // Calculate time remaining for 2-min timer
+  const pushTime = q.createdAt?.toDate ? q.createdAt.toDate() : null;
+  const TWO_MIN = (q.timerSeconds||120) * 1000;
+  const now = Date.now();
+  const elapsed = pushTime ? now - pushTime.getTime() : TWO_MIN;
+  const remaining = Math.max(0, TWO_MIN - elapsed);
+  const expired = remaining <= 0;
+  const timerMins = Math.floor(remaining/60000);
+  const timerSecs = Math.floor((remaining%60000)/1000);
+  const timerHtml = (!ans && !q.settled && !expired)
+    ? `<div class="bq-timer" id="bqt-${id}" data-end="${pushTime ? pushTime.getTime()+TWO_MIN : now}">
+        <div class="bq-timer-ring">
+          <svg width="48" height="48" viewBox="0 0 48 48">
+            <circle cx="24" cy="24" r="20" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="4"/>
+            <circle cx="24" cy="24" r="20" fill="none" stroke="var(--red)" stroke-width="4" stroke-dasharray="125.6" stroke-dashoffset="${125.6*(elapsed/TWO_MIN)}" stroke-linecap="round" transform="rotate(-90 24 24)" id="bqring-${id}"/>
+          </svg>
+        </div>
+        <div class="bq-timer-text">
+          <div class="bq-t-num" id="bqtn-${id}">${String(timerMins).padStart(2,'0')}:${String(timerSecs).padStart(2,'0')}</div>
+          <div class="bq-t-lbl">Time Left</div>
+        </div>
+      </div>`
+    : expired && !ans && !q.settled
+      ? `<div class="ans-b" style="border-color:var(--red);color:var(--red)">⏰ Time's up! You missed this question.</div>`
+      : '';
+  const disableOpts = ans!==undefined || q.settled || expired;
+  const optsHtml = (q.options||[]).map((o,i)=>{
+    let cls='opt';
+    if(ans!==undefined){if(q.settled){if(i===q.correctOpt)cls+=' ok';else if(i===ans)cls+=' no';}else if(i===ans)cls+=' sel';}
+    const ck=q.settled&&i===q.correctOpt?'<span style="color:var(--green);font-size:10px">✓ +5</span>':'';
+    return`<button class="${cls}" onclick="ansBQ('${id}',${i})" ${disableOpts?'disabled':''}>${o}${ck}</button>`;
+  }).join('');
+  return`<div class="qc bonus" id="bqcard-${id}"><div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px">${timerHtml?timerHtml:''}<div style="flex:1"><span class="qbadge qb-b">⭐ BONUS +5 PTS</span><div class="qt">${q.question}</div><div class="qmeta">🏏 ${q.match||'Live'}</div></div></div><div class="opts" style="margin-top:10px">${optsHtml}</div>${fb}</div>`;
+}
+
+// Start timers for all bonus questions
+function startBQTimers(){
+  clearInterval(window._bqTimerInterval);
+  window._bqTimerInterval = setInterval(()=>{
+    document.querySelectorAll('[id^="bqt-"]').forEach(el=>{
+      const endTime = parseInt(el.dataset.end||'0');
+      const id = el.id.replace('bqt-','');
+      const rem = Math.max(0, endTime - Date.now());
+      const m = Math.floor(rem/60000);
+      const s = Math.floor((rem%60000)/1000);
+      const numEl = document.getElementById('bqtn-'+id);
+      const ringEl = document.getElementById('bqring-'+id);
+      const total = 2*60*1000;
+      const elapsed = total - rem;
+      if(numEl) numEl.textContent = String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+      if(ringEl) ringEl.setAttribute('stroke-dashoffset', (125.6*(elapsed/total)).toFixed(1));
+      if(rem<=0){
+        // Timer expired - disable options
+        const card = document.getElementById('bqcard-'+id);
+        if(card){
+          card.querySelectorAll('.opt:not([disabled])').forEach(b=>b.disabled=true);
+          el.outerHTML='<div class="ans-b" style="border-color:var(--red);color:var(--red);margin-bottom:8px">⏰ Time's up! Question closed.</div>';
+        }
+      }
+    });
+  },1000);
+}
+
+window.ansBQ=async function(qid,i){
+  if(!CU||UD?.bqa?.[qid]!==undefined)return;
+  // Check if timer expired
+  try{
+    const qsnap=await getDoc(doc(db,'bonusQuestions',qid));
+    if(qsnap.exists()){
+      const qd=qsnap.data();
+      const pushTime=qd.createdAt?.toDate?qd.createdAt.toDate():null;
+      const timerMs=(qd.timerSeconds||120)*1000;
+      if(pushTime&&(Date.now()-pushTime.getTime())>=timerMs){
+        toast('⏰ Time up! This question is closed.','var(--red)');return;
+      }
+    }
+    await updateDoc(doc(db,'users',CU.uid),{['bqa.'+qid]:i});
+    await addDoc(collection(db,'bonusQuestions',qid,'entries'),{uid:sU(),name:sN(),answer:i,createdAt:serverTimestamp()});
+    if(!UD.bqa)UD.bqa={};UD.bqa[qid]=i;
+    toast('✅ Answer saved! Result aayega match ke baad.','var(--green)');
+  }catch(e){toast('Error: '+e.message,'var(--red)');}
+};
+
+// ===== SCORE QUESTIONS =====
+function listenSQ(){
+  if(sqUnsub)sqUnsub();
+  sqUnsub=onSnapshot(collection(db,'scoreQuestions'),s=>{
+    const el=document.getElementById('sqs-list');
+    if(s.empty){el.innerHTML='<div class="empty"><div class="ei">📊</div><p>No score questions yet</p></div>';return;}
+    el.innerHTML='';
+    s.forEach(d=>{const q=d.data();el.innerHTML+=mkSQ(d.id,q,UD?.sqa?.[d.id]);});
+  });
+}
+
+function mkSQ(id,q,ans){
+  const opts=(q.options||[]).map((o,i)=>{
+    let cls='opt';
+    if(ans!==undefined){if(q.settled){if(i===q.correctOpt)cls+=' ok';else if(i===ans)cls+=' no';}else if(i===ans)cls+=' sel';}
+    const ck=q.settled&&i===q.correctOpt?`<span style="color:var(--green);font-size:10px">✓ +${o.pts}</span>`:`<span class="pts-pill">+${o.pts}pts</span>`;
+    return`<button class="${cls}" onclick="ansSQ('${id}',${i},${o.pts||5})" ${ans!==undefined||q.settled?'disabled':''}><span>${o.label}</span>${ck}</button>`;
+  }).join('');
+  let fb='';
+  if(ans!==undefined){
+    if(q.settled)fb=ans===q.correctOpt?`<div class="ans-b">🎉 Correct! +${(q.options||[])[q.correctOpt]?.pts||5} pts!</div>`:`<div class="ans-b" style="border-color:var(--red);color:var(--red)">❌ Wrong. Correct: ${(q.options||[])[q.correctOpt]?.label||'—'}</div>`;
+    else fb=`<div class="ans-b">✅ Prediction saved — Result after match!</div>`;
+  }
+  return`<div class="qc score"><span class="qbadge qb-s">🎯 SCORE RANGE • 5-20 PTS</span><div class="qt">${q.question}</div><div class="qmeta">🏏 ${q.match||'Live'} · More accurate = More points!</div><div class="opts">${opts}</div>${fb}</div>`;
+}
+
+window.ansSQ=async function(qid,i,pts){
+  if(!CU||UD?.sqa?.[qid]!==undefined)return;
+  try{
+    await updateDoc(doc(db,'users',CU.uid),{['sqa.'+qid]:i});
+    await addDoc(collection(db,'scoreQuestions',qid,'entries'),{uid:sU(),name:sN(),answer:i,potPts:pts,createdAt:serverTimestamp()});
+    if(!UD.sqa)UD.sqa={};UD.sqa[qid]=i;
+    toast('✅ Score prediction saved! Up to +'+pts+' pts if correct!','var(--gold)');
+  }catch(e){toast('Error: '+e.message,'var(--red)');}
+};
+
+// ===== LEADERBOARD =====
+async function loadLB(elId,lim){
+  const el=document.getElementById(elId);
+  if(!el)return;
+  try{
+    const s=await getDocs(query(collection(db,'users'),orderBy('points','desc'),limit(lim||20)));
+    if(s.empty){el.innerHTML='<div class="empty"><div class="ei">🏅</div><p>No users yet</p></div>';return;}
+    el.innerHTML='';
+    let rank=1;
+    s.forEach(d=>{
+      const u=d.data();const isMe=d.id===CU?.uid;
+      const rc=rank===1?'r1':rank===2?'r2':rank===3?'r3':'';
+      const em=rank<=3?['🥇','🥈','🥉'][rank-1]:rank;
+      const ph=u.photoURL;
+      el.innerHTML+=`<div class="lb-item ${isMe?'me':''}">
+        <div class="lb-r ${rc}">${em}</div>
+        <div class="lb-av">${ph?`<img src="${ph}"/>`:(u.name||'?').charAt(0).toUpperCase()}</div>
+        <div class="lb-info"><div class="lb-name">${u.name||'User'} ${isMe?'<span style="font-size:9px;color:var(--neon)">(You)</span>':''}</div><div class="lb-sub">Contests: ${u.contestsJoined||0} · Wins: ${u.wins||0}</div></div>
+        <div class="lb-pts">${u.points||0}<div style="font-size:9px;color:var(--muted);font-weight:400">pts</div></div>
+      </div>`;
+      rank++;
+    });
+  }catch(e){}
+}
+
+// ===== WALLET =====
+window.openDep=function(){document.getElementById('d-amt').value='';document.getElementById('d-utr').value='';document.getElementById('d-err').textContent='';document.getElementById('dep-modal').classList.add('open');};
+window.submitDep=async function(){
+  const amt=parseInt(document.getElementById('d-amt').value);
+  const utr=document.getElementById('d-utr').value.trim();
+  const e=document.getElementById('d-err');
+  if(!amt||amt<500){e.textContent='⚠️ Minimum deposit is ₹500!';return;}
+  if(!utr||utr.length<6){e.textContent='Enter valid UTR number';return;}
+  try{
+    let ud=UD;if(!ud){const s=await getDoc(doc(db,'users',CU.uid));if(s.exists())ud=s.data();}
+    await addDoc(collection(db,'depositRequests'),{uid:sU(),name:String(ud?.name||sN()),email:sE(),amount:Number(amt),utr:String(utr),status:'pending',createdAt:serverTimestamp()});
+    await addDoc(collection(db,'users',CU.uid,'txns'),{type:'credit',title:'💳 Deposit Rs.'+amt+' (Pending)',amount:Number(amt),status:'pending',createdAt:serverTimestamp()});
+    cm('dep-modal');toast('✅ Submitted! Admin verifies within 30 mins.','var(--green)');
+  }catch(e2){e.textContent=e2.message;}
+};
+window.openWd=function(){document.getElementById('w-amt').value='';document.getElementById('w-upi').value='';document.getElementById('w-err').textContent='';document.getElementById('wd-modal').classList.add('open');};
+window.submitWd=async function(){
+  const amt=parseInt(document.getElementById('w-amt').value);
+  const upi=document.getElementById('w-upi').value.trim();
+  const e=document.getElementById('w-err');
+  if(!amt||amt<100){e.textContent='Minimum withdrawal ₹100';return;}
+  if(WL()<amt){e.textContent='Insufficient balance!';return;}
+  if(!upi){e.textContent='Enter UPI ID';return;}
+  try{
+    let ud=UD;if(!ud){const s=await getDoc(doc(db,'users',CU.uid));if(s.exists())ud=s.data();}
+    await addDoc(collection(db,'withdrawRequests'),{uid:sU(),name:String(ud?.name||sN()),email:sE(),amount:Number(amt),upi:String(upi),status:'pending',createdAt:serverTimestamp()});
+    await updateDoc(doc(db,'users',CU.uid),{wallet:increment(-amt)});
+    await addDoc(collection(db,'users',CU.uid,'txns'),{type:'debit',title:'💸 Withdrawal Rs.'+amt+' (Pending)',amount:Number(amt),status:'pending',createdAt:serverTimestamp()});
+    UD.wallet=(UD.wallet||0)-amt;updateUI();cm('wd-modal');toast('✅ Withdrawal request submitted!','var(--green)');
+  }catch(e2){e.textContent=e2.message;}
+};
+async function loadTxns(){
+  const el=document.getElementById('txn-list');
+  try{
+    const s=await getDocs(query(collection(db,'users',CU.uid,'txns'),orderBy('createdAt','desc'),limit(30)));
+    if(s.empty){el.innerHTML='<div class="empty"><div class="ei">📂</div><p>No transactions</p></div>';return;}
+    el.innerHTML='';
+    s.forEach(d=>{
+      const t=d.data();
+      const dt=t.createdAt?.toDate?t.createdAt.toDate().toLocaleDateString('en-IN'):'—';
+      const sc=t.status==='completed'?'var(--green)':t.status==='pending'?'var(--orange)':'var(--red)';
+      el.innerHTML+=`<div class="ti"><div class="ti-i"><div class="tt">${t.title}</div><div class="td">${dt} · <span style="color:${sc}">${t.status}</span></div></div><div class="ti-a ${t.type==='credit'?'cr':'dr'}">${t.type==='credit'?'+':'-'}₹${t.amount}</div></div>`;
+    });
+  }catch(e){}
+}
+async function loadPH(){
+  const el=document.getElementById('pts-hist');
+  try{
+    const s=await getDocs(query(collection(db,'users',CU.uid,'ph'),orderBy('createdAt','desc'),limit(20)));
+    if(s.empty){el.innerHTML='<div class="empty"><div class="ei">📋</div><p>No points yet</p></div>';return;}
+    el.innerHTML='';
+    const cc={pm:'var(--neon)',bq:'var(--green)',lv:'var(--orange)',sq:'var(--gold)',su:'var(--purple)'};
+    s.forEach(d=>{
+      const h=d.data();
+      const dt=h.createdAt?.toDate?h.createdAt.toDate().toLocaleDateString('en-IN'):'—';
+      el.innerHTML+=`<div class="ph-item"><div class="ph-i"><div class="pt">${h.title}</div><div class="pd">${dt}</div></div><div class="ph-p" style="color:${cc[h.type]||'var(--purple)'}">+${h.pts}</div></div>`;
+    });
+  }catch(e){}
+}
+
+// ===== CHATBOT =====
+window.toggleChat=function(){
+  const w=document.getElementById('chat-window');
+  w.classList.toggle('open');
+  if(w.classList.contains('open'))listenChat();
+  else if(chatUnsub){chatUnsub();chatUnsub=null;}
+};
+
+function listenChat(){
+  if(chatUnsub)return;
+  const el=document.getElementById('chat-msgs');
+  chatUnsub=onSnapshot(query(collection(db,'chats'),orderBy('createdAt','asc'),limit(50)),s=>{
+    el.innerHTML='<div class="chat-msg admin">👋 Hello! I\'m Smart 11 Support. Ask anything!<div class="cm-time">Smart 11</div></div>';
+    s.forEach(d=>{
+      const m=d.data();
+      const isMe=m.uid===CU?.uid;
+      const isAdmin=m.isAdmin;
+      const t=m.createdAt?.toDate?m.createdAt.toDate().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'}):'—';
+      el.innerHTML+=`<div class="chat-msg ${isAdmin?'admin':'user'}">${isAdmin?'🎧 Admin: ':''}${m.text}<div class="cm-time">${isAdmin?'Support · ':m.name+' · '}${t}</div></div>`;
+    });
+    el.scrollTop=el.scrollHeight;
+  });
+}
+
+window.sendMsg=async function(){
+  const inp=document.getElementById('chat-inp');
+  const txt=inp.value.trim();
+  if(!txt||!CU)return;
+  inp.value='';
+  try{
+    await addDoc(collection(db,'chats'),{uid:sU(),name:sN(),text:txt,isAdmin:false,createdAt:serverTimestamp()});
+    // Auto reply for common questions
+    const lower=txt.toLowerCase();
+    let reply='';
+    if(lower.includes('point')&&lower.includes('how'))reply='⭐ Points System: Pre-match Q = 10pts, Bonus Q = 5pts, Live timer = 1pt/5min, Score Q = 5-20pts';
+    else if(lower.includes('deposit')||lower.includes('add money'))reply='💳 Pay via UPI: rishabhsisodiya1998@ybl (Min ₹500). Enter UTR number after payment.';
+    else if(lower.includes('withdraw'))reply='💸 Withdrawal requests are processed within 24 hours. Min ₹100.';
+    else if(lower.includes('contest')||lower.includes('pool'))reply='🏆 Answer 10 pre-match questions → Pay entry fee → Win prizes!';
+    else if(lower.includes('result')||lower.includes('answer'))reply='📋 All question results are settled by admin after the match ends.';
+    if(reply){
+      setTimeout(async()=>{
+        await addDoc(collection(db,'chats'),{uid:'admin',name:'Admin',text:reply,isAdmin:true,createdAt:serverTimestamp()});
+      },1200);
+    }
+  }catch(e){}
+};
+
+// ===== AUTH =====
+window.stab=function(t){
+  document.getElementById('tl').classList.toggle('on',t==='login');
+  document.getElementById('ts').classList.toggle('on',t==='signup');
+  document.getElementById('lf').style.display=t==='login'?'block':'none';
+  document.getElementById('sf').style.display=t==='signup'?'block':'none';
+  document.getElementById('aerr').textContent='';
+};
+window.doLogin=async function(){
+  const em=document.getElementById('le').value.trim(),pw=document.getElementById('lp').value;
+  const e=document.getElementById('aerr');
+  if(!em||!pw){e.textContent='Fill all fields';return;}
+  try{e.textContent='';await signInWithEmailAndPassword(auth,em,pw);}
+  catch(err){e.textContent=err.code==='auth/invalid-credential'?'Invalid email or password':err.message;}
+};
+window.doSignup=async function(){
+  const nm=document.getElementById('sn').value.trim(),em=document.getElementById('se').value.trim(),pw=document.getElementById('sp').value;
+  const e=document.getElementById('aerr');
+  if(!nm||!em||!pw){e.textContent='Fill all fields';return;}
+  if(pw.length<6){e.textContent='Password min 6 characters';return;}
+  try{
+    e.textContent='';
+    const c=await createUserWithEmailAndPassword(auth,em,pw);
+    await setDoc(doc(db,'users',c.user.uid),{name:String(nm),email:String(em),photoURL:'',wallet:50,bonus:50,points:50,pb:{pm:0,bq:0,lv:0,sq:0,su:50},contestsJoined:0,wins:0,createdAt:serverTimestamp()});
+    await addDoc(collection(db,'users',c.user.uid,'txns'),{type:'credit',title:'🎁 Signup Bonus',amount:50,status:'completed',createdAt:serverTimestamp()});
+    await addDoc(collection(db,'users',c.user.uid,'ph'),{type:'su',title:'🎁 Signup Bonus',pts:50,createdAt:serverTimestamp()});
+    toast('🎉 Welcome! ₹50 + 50 Points added!','var(--green)');
+  }catch(err){document.getElementById('aerr').textContent=err.message;}
+};
+window.doGoogle=async function(){
+  const e=document.getElementById('aerr');
+  e.textContent='🔄 Redirecting to Google...';e.style.color='var(--neon)';
+  const p=new GoogleAuthProvider();p.setCustomParameters({prompt:'select_account'});
+  await signInWithRedirect(auth,p);
+};
+async function handleGU(u){
+  const s=await getDoc(doc(db,'users',u.uid));
+  if(!s.exists()){
+    const nm=String(u.displayName||u.email?.split('@')[0]||'User'),em=String(u.email||'');
+    await setDoc(doc(db,'users',u.uid),{name:nm,email:em,photoURL:String(u.photoURL||''),wallet:50,bonus:50,points:50,pb:{pm:0,bq:0,lv:0,sq:0,su:50},contestsJoined:0,wins:0,createdAt:serverTimestamp()});
+    await addDoc(collection(db,'users',u.uid,'txns'),{type:'credit',title:'🎁 Signup Bonus',amount:50,status:'completed',createdAt:serverTimestamp()});
+    await addDoc(collection(db,'users',u.uid,'ph'),{type:'su',title:'🎁 Signup Bonus',pts:50,createdAt:serverTimestamp()});
+    toast('🎉 Welcome! ₹50 + 50 Points!','var(--green)');
+  }
+}
+window.doLogout=async function(){
+  if(bqUnsub)bqUnsub();if(sqUnsub)sqUnsub();if(chatUnsub)chatUnsub();
+  await signOut(auth);
+};
+function showMain(){document.getElementById('auth-screen').style.display='none';document.getElementById('main-screen').style.display='block';}
+
+// ===== NAV =====
+window.goPage=function(pg){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.bn').forEach(b=>b.classList.remove('on'));
+  document.getElementById('page-'+pg).classList.add('on');
+  const bn=document.getElementById('bn-'+pg);if(bn)bn.classList.add('on');
+  if(pg==='wallet')loadTxns();
+  if(pg==='lb')loadLB('lb-full',20);
+  if(pg==='points')loadPH();
+};
+window.cm=function(id){document.getElementById(id).classList.remove('open');};
+document.querySelectorAll('.mov').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open');}));
+window.toast=function(msg,color='var(--neon)'){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.style.borderColor=color;t.style.color=color;
+  t.classList.add('show');clearTimeout(window._tt);
+  window._tt=setTimeout(()=>t.classList.remove('show'),3200);
+};
+
+// ===== PWA =====
+let dp;
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();dp=e;document.getElementById('inst-btn').st
